@@ -82,6 +82,7 @@ Route::resource('cuti', CutiController::class);
 Route::resource('penggajian', PenggajianController::class);
 Route::get('/penggajian', [PenggajianController::class, 'index']);
 Route::post('/penggajian/store', [PenggajianController::class, 'store']);
+Route::get('/test', [PegawaiController::class, 'p']);
 
 
 /*
