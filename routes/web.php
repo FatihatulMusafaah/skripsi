@@ -2,8 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Models\Pegawai;
-
+use App\Models\User;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\AdminController;
@@ -14,7 +13,6 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RiwayatKasbonController;
 use App\Http\Controllers\SesiController;
-use App\Models\RiwayatKasbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,9 +42,9 @@ Route::get('/login',[AdminController::class,'index']);
 
 Route::get('/dashboard', function () {
 
-    $pegawai = Pegawai::latest()->get();
+    $pegawai = User::where('role', 'karyawan')->latest()->get();
 
-    $totalPegawai = Pegawai::count();
+    $totalPegawai = User::where('role', 'karyawan')->count();
 
     // Tambahkan variabel kosong/default ini agar view tidak error
     $absensiHariIni = 0; 
@@ -103,9 +101,8 @@ Route::resource('cuti', CutiController::class);
 |--------------------------------------------------------------------------
 */
 
-Route::resource('penggajian', PenggajianController::class);
-Route::get('/penggajian', [PenggajianController::class, 'index']);
-Route::post('/penggajian/store', [PenggajianController::class, 'store']);
+Route::get('/penggajian', [PenggajianController::class, 'index'])->name('penggajian.index');
+Route::post('/penggajian/store', [PenggajianController::class, 'store'])->name('penggajian.store');
 
 
 /*
@@ -135,9 +132,9 @@ route::get('/Admin/karyawan',[AdminController::class, 'karyawan'])->middleware('
 Route::middleware(['auth'])->group(function(){ });
 Route::get('/dashboardkaryawan', function () {
 
-    $pegawai = Pegawai::latest()->get();
+    $pegawai = User::where('role', 'karyawan')->latest()->get();
 
-    $totalPegawai = Pegawai::count();
+    $totalPegawai = User::where('role', 'karyawan')->count();
 
     // Tambahkan variabel kosong/default ini agar view tidak error
     $absensiHariIni = 0; 
@@ -163,9 +160,9 @@ Route::middleware(['auth'])->group(function(){});
 
 Route::get('/dashboardkaryawan', function () {
 
-    $pegawai = Pegawai::latest()->get();
+    $pegawai = User::where('role', 'karyawan')->latest()->get();
 
-    $totalPegawai = Pegawai::count();
+    $totalPegawai = User::where('role', 'karyawan')->count();
 
     // Tambahkan variabel kosong/default ini agar view tidak error
     $absensiHariIni = 0; 

@@ -142,7 +142,7 @@
         <h2>OWNER PANEL</h2>
 
         <a href="/dashboard">Dashboard</a>
-        <a href="/pegawai">Data Pegawai</a>
+        <a href="{{ route('pegawai.index') }}">Data Pegawai</a>
         <a href="/absensi">Absensi</a>
         <a href="/cuti">Cuti</a>
         <a href="/kasbon">Kasbon</a>

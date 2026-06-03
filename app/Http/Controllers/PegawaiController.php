@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Pegawai;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class PegawaiController extends Controller
 {
     /**
-     * Tampilkan data pegawai
+     * Tampilkan data pegawai (User)
      */
     public function index()
     {
-        $pegawai = Pegawai::latest()->get();
+        $pegawai = User::latest()->get();
 
         return view('pegawai.index', compact('pegawai'));
     }
@@ -26,26 +27,22 @@ class PegawaiController extends Controller
     }
 
     /**
-     * Simpan pegawai
+     * Simpan pegawai ke tabel users
      */
     public function store(Request $request)
     {
         $request->validate([
-            'id_pegawai' => 'required',
-            'nama' => 'required',
-            'email' => 'required',
-            'jabatan' => 'required',
-            'no_hp' => 'required',
-            'alamat' => 'required',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+            'role' => 'required|in:admin,owner,karyawan',
         ]);
 
-        Pegawai::create([
-            'id_pegawai' => $request->id_pegawai,
-            'nama' => $request->nama,
+        User::create([
+            'name' => $request->name,
             'email' => $request->email,
-            'jabatan' => $request->jabatan,
-            'no_hp' => $request->no_hp,
-            'alamat' => $request->alamat,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
         return redirect()->route('pegawai.index')
@@ -53,30 +50,42 @@ class PegawaiController extends Controller
     }
 
     /**
-     * Form edit
+     * Form edit pegawai
      */
     public function edit($id)
     {
-        $pegawai = Pegawai::findOrFail($id);
+        $pegawai = User::findOrFail($id);
 
         return view('pegawai.edit', compact('pegawai'));
     }
 
     /**
-     * Update pegawai
+     * Update pegawai di tabel users
      */
     public function update(Request $request, $id)
     {
-        $pegawai = Pegawai::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        $pegawai->update([
-            'id_pegawai' => $request->id_pegawai,
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'jabatan' => $request->jabatan,
-            'no_hp' => $request->no_hp,
-            'alamat' => $request->alamat,
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'role' => 'required|in:admin,owner,karyawan',
         ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+        ];
+
+        if ($request->filled('password')) {
+            $request->validate([
+                'password' => 'string|min:6',
+            ]);
+            $data['password'] = Hash::make($request->password);
+        }
+
+        $user->update($data);
 
         return redirect()->route('pegawai.index')
             ->with('success', 'Data pegawai berhasil diupdate');
@@ -87,9 +96,8 @@ class PegawaiController extends Controller
      */
     public function destroy($id)
     {
-        $pegawai = Pegawai::findOrFail($id);
-
-        $pegawai->delete();
+        $user = User::findOrFail($id);
+        $user->delete();
 
         return redirect()->route('pegawai.index')
             ->with('success', 'Data pegawai berhasil dihapus');

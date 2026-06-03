@@ -6,13 +6,78 @@
     <title>Sistem Informasi Kepegawaian</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    @vite('resources/css/app.css')
 </head>
 
 <body class="bg-gray-100">
 
-    <div class="container mx-auto py-6">
+    <div class="flex min-h-screen">
 
-        @yield('content')
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-gray-800 text-white p-5 hidden md:block">
+
+            <h2 class="text-2xl font-bold mb-6 text-blue-400">
+                SI KEPEGAWAIAN
+            </h2>
+
+            <nav class="space-y-2">
+
+                <a href="{{ route('dashboard') }}"
+                   class="block p-3 rounded {{ request()->is('dashboard') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                    Dashboard
+                </a>
+
+                <a href="{{ route('pegawai.index') }}"
+                   class="block p-3 rounded {{ request()->is('pegawai*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                    Data Pegawai
+                </a>
+
+                <a href="{{ route('absensi.index') }}"
+                   class="block p-3 rounded {{ request()->is('absensi*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                    Absensi
+                </a>
+
+                <a href="{{ route('cuti.index') }}"
+                   class="block p-3 rounded {{ request()->is('cuti*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                    Pengajuan Cuti
+                </a>
+
+                <a href="{{ route('penggajian.index') }}"
+                   class="block p-3 rounded {{ request()->is('penggajian*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                    Penggajian
+                </a>
+
+                <a href="{{ route('kasbon.index') }}"
+                   class="block p-3 rounded {{ request()->is('kasbon*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                    Kasbon
+                </a>
+
+                <a href="{{ route('riwayat-kasbon.index') }}"
+                   class="block p-3 rounded {{ request()->is('riwayatkasbon*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                    Riwayat Kasbon
+                </a>
+
+                <a href="{{ route('laporan.index') }}"
+                   class="block p-3 rounded {{ request()->is('laporan*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                    Laporan
+                </a>
+
+                <div class="pt-10">
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="w-full text-left p-3 rounded bg-red-600 hover:bg-red-700 transition">
+                            Logout
+                        </button>
+                    </form>
+                </div>
+            </nav>
+
+        </aside>
+
+        <!-- CONTENT -->
+        <main class="flex-1 p-8">
+            @yield('content')
+        </main>
 
     </div>
 
