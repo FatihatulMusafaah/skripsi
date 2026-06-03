@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RiwayatKasbon;
+use App\Models\Kasbon;
 use App\Models\Pegawai;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,8 @@ class RiwayatKasbonController extends Controller
 {
     public function index()
     {
-        $riwayat = RiwayatKasbon::with('pegawai')->get();
+        // Mengambil data dari tabel kasbon (Model Kasbon)
+        $riwayat = Kasbon::with('pegawai')->latest()->get();
 
         return view('riwayat_kasbon.index', compact('riwayat'));
     }

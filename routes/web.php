@@ -117,7 +117,7 @@ Route::post('/penggajian/store', [PenggajianController::class, 'store']);
 Route::resource('kasbon', KasbonController::class);
 
 
-Route::get('/riwayat-kasbon', [RiwayatKasbonController::class, 'index'])
+Route::get('/riwayatkasbon', [RiwayatKasbonController::class, 'index'])
     ->name('riwayat-kasbon.index');
 
 /*
