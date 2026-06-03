@@ -12,25 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cuti', function (Blueprint $table) {
-        $table->id();
+            $table->id();
 
-        $table->string('pegawai_id');
+            $table->foreignId('user_id')
+                ->constrained('user')
+                ->onDelete('cascade');
 
-        
-
-        $table->string('nama_pegawai');
-        $table->date('tanggal_mulai');
-        $table->date('tanggal_selesai');
-        $table->text('alasan');
-        $table->string('status')
-      ->default('Menunggu');
-        $table->timestamps();
-        
-        $table->foreign('pegawai_id')
-              ->references('id')
-              ->on('pegawai')
-              ->onDelete('cascade');
-    });
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->text('alasan');
+            $table->string('status')->default('Menunggu');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -39,6 +32,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('cuti');
-
     }
 };

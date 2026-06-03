@@ -12,8 +12,7 @@ class Cuti extends Model
     protected $table = 'cuti';
 
     protected $fillable = [
-        'pegawai_id',
-        'nama_pegawai',
+        'user_id',
         'tanggal_mulai',
         'tanggal_selesai',
         'alasan',
@@ -21,10 +20,10 @@ class Cuti extends Model
     ];
 
     /**
-     * Relasi ke pegawai
+     * Relasi ke user
      */
-    public function pegawai()
+    public function user()
     {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

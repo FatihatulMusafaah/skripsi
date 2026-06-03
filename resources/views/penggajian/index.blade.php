@@ -1,299 +1,102 @@
 @extends('layouts.app')
 
 @section('content')
-
-<div class="container py-4">
-
-    {{-- HEADER --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-            <h2 class="fw-bold text-primary mb-1">
-                Data Penggajian
-            </h2>
-
-            <p class="text-muted">
-                Sistem Informasi Penggajian Pegawai
-            </p>
-        </div>
-
+<div class="bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Data Penggajian</h2>
+        <!-- Button to trigger modal or separate page for creating payroll -->
+        <button onclick="toggleModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+            + Proses Gaji
+        </button>
     </div>
 
-    {{-- FORM CARD --}}
-    <div class="card border-0 shadow-lg rounded-4 mb-5">
-
-        <div class="card-header bg-primary text-white rounded-top-4 py-3">
-
-            <h5 class="mb-0">
-                Form Penggajian
-            </h5>
-
+    @if (session('success'))
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+            <p>{{ session('success') }}</p>
         </div>
+    @endif
 
-        <div class="card-body p-4">
-
-            <form action="/penggajian/store" method="POST">
-
-                @csrf
-
-                <div class="row">
-
-                    {{-- PEGAWAI --}}
-                    <div class="col-md-6 mb-4">
-
-                        <label class="form-label fw-semibold">
-                           nama pegawai
-                        </label>
-
-                        <select name="pegawai_id"
-                                class="form-select">
-
-                            <option value="">
-                                -- Pilih Pegawai --
-                            </option>
-
-                            @foreach($pegawai as $pegawai)
-
-                                <option value="{{ $pegawai->id }}">
-
-                                    {{ $pegawai->nama }}
-
-                                </option>
-
-                            @endforeach
-
-                        </select>
-
-                    </div>
-
-                    {{-- BULAN --}}
-                    <div class="col-md-6 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Bulan
-                        </label>
-
-                        <input type="month"
-                               name="bulan"
-                               class="form-control">
-
-                    </div>
-
-                    {{-- GAJI POKOK --}}
-                    <div class="col-md-4 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Gaji Pokok
-                        </label>
-
-                        <input type="number"
-                               name="gaji_pokok"
-                               class="form-control"
-                               placeholder="Masukkan gaji pokok">
-
-                    </div>
-
-                    {{-- JAM LEMBUR --}}
-                    <div class="col-md-4 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Jam Lembur
-                        </label>
-
-                        <input type="number"
-                               name="jam_lembur"
-                               class="form-control"
-                               placeholder="Masukkan jam lembur">
-
-                    </div>
-
-                    {{-- TARIF LEMBUR --}}
-                    <div class="col-md-4 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Tarif Lembur
-                        </label>
-
-                        <input type="number"
-                               name="tarif_lembur"
-                               class="form-control"
-                               placeholder="Masukkan tarif lembur">
-
-                    </div>
-
-                    {{-- POTONGAN KASBON --}}
-                    <div class="col-md-6 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Potongan Kasbon
-                        </label>
-
-                        <input type="number"
-                               name="potongan_kasbon"
-                               class="form-control"
-                               placeholder="Masukkan potongan kasbon">
-
-                    </div>
-
-                    {{-- POTONGAN LAIN --}}
-                    <div class="col-md-6 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Potongan Lainnya
-                        </label>
-
-                        <input type="number"
-                               name="potongan_lainnya"
-                               class="form-control"
-                               placeholder="Masukkan potongan lainnya">
-
-                    </div>
-
-                    {{-- KETERANGAN --}}
-                    <div class="col-md-12 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Keterangan
-                        </label>
-
-                        <textarea name="keterangan"
-                                  rows="4"
-                                  class="form-control"
-                                  placeholder="Masukkan keterangan"></textarea>
-
-                    </div>
-
-                    {{-- BUTTON --}}
-                    <div class="col-md-12">
-
-                        <button type="submit"
-                                class="btn btn-primary px-5 py-2 rounded-pill shadow">
-
-                            Simpan Penggajian
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </form>
-
-        </div>
-
+    <div class="overflow-x-auto">
+        <table class="min-w-full table-auto border-collapse">
+            <thead>
+                <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">No</th>
+                    <th class="py-3 px-6 text-left">Nama Pegawai</th>
+                    <th class="py-3 px-6 text-left">Gaji Pokok</th>
+                    <th class="py-3 px-6 text-left">Lembur</th>
+                    <th class="py-3 px-6 text-left">Potongan</th>
+                    <th class="py-3 px-6 text-left">Total Diterima</th>
+                    <th class="py-3 px-6 text-left">Tanggal</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                @forelse ($penggajian as $item)
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->iteration }}</td>
+                        <td class="py-3 px-6 text-left font-medium">{{ $item->user->name ?? '-' }}</td>
+                        <td class="py-3 px-6 text-left">Rp {{ number_format($item->gaji_pokok, 0, ',', '.') }}</td>
+                        <td class="py-3 px-6 text-left">Rp {{ number_format($item->lembur, 0, ',', '.') }}</td>
+                        <td class="py-3 px-6 text-left text-red-500">- Rp {{ number_format($item->potongan, 0, ',', '.') }}</td>
+                        <td class="py-3 px-6 text-left font-bold text-green-600">Rp {{ number_format($item->total_gaji, 0, ',', '.') }}</td>
+                        <td class="py-3 px-6 text-left">{{ $item->tanggal }}</td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="py-6 text-center text-gray-500 italic">Data penggajian belum tersedia.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
-
-    {{-- TABLE CARD --}}
-    <div class="card border-0 shadow-lg rounded-4">
-
-        <div class="card-header bg-dark text-white rounded-top-4 py-3">
-
-            <h5 class="mb-0">
-                Data Penggajian Pegawai
-            </h5>
-
-        </div>
-
-        <div class="card-body p-4">
-
-            <div class="table-responsive">
-
-                <table class="table table-hover align-middle">
-
-                    <thead class="table-primary">
-
-                        <tr>
-
-                            <th>No</th>
-
-                            <th>Nama Pegawai</th>
-
-                            <th>Bulan</th>
-
-                            <th>Gaji Pokok</th>
-
-                            <th>Lembur</th>
-
-                            <th>Potongan</th>
-
-                            <th>Total Gaji</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody>
-
-                        @forelse($penggajian as $gaji)
-
-                        <tr>
-
-                            <td>
-                                {{ $loop->iteration }}
-                            </td>
-
-                            <td class="fw-semibold">
-
-                                {{ $gaji->pegawai->nama ?? '-' }}
-
-                            </td>
-
-                            <td>
-
-                                {{ $gaji->bulan }}
-
-                            </td>
-
-                            <td>
-
-                                Rp {{ number_format($gaji->gaji_pokok) }}
-
-                            </td>
-
-                            <td class="text-success fw-semibold">
-
-                                Rp {{ number_format($gaji->jam_lembur * $gaji->tarif_lembur) }}
-
-                            </td>
-
-                            <td class="text-danger fw-semibold">
-
-                                Rp {{ number_format($gaji->potongan_kasbon + $gaji->potongan_lainnya) }}
-
-                            </td>
-
-                            <td class="fw-bold text-primary">
-
-                                Rp {{ number_format($gaji->total_gaji) }}
-
-                            </td>
-
-                        </tr>
-
-                        @empty
-
-                        <tr>
-
-                            <td colspan="7" class="text-center text-muted py-4">
-
-                                Data penggajian belum tersedia
-
-                            </td>
-
-                        </tr>
-
-                        @endforelse
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-        </div>
-
-    </div>
-
 </div>
 
+<!-- Simple Modal for Processing Payroll -->
+<div id="payrollModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Proses Gaji Pegawai</h3>
+            <form action="{{ route('penggajian.store') }}" method="POST" class="mt-4 text-left">
+                @csrf
+                <div class="mb-3">
+                    <label class="block text-sm font-bold mb-1">Pilih Pegawai</label>
+                    <select name="user_id" class="w-full border rounded px-2 py-1" required>
+                        @foreach ($pegawai as $p)
+                            <option value="{{ $p->id }}">{{ $p->name }} (Rp {{ number_format($p->gaji_pokok, 0, ',', '.') }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-bold mb-1">Bulan</label>
+                    <input type="month" name="bulan" class="w-full border rounded px-2 py-1" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-bold mb-1">Gaji Pokok</label>
+                    <input type="number" name="gaji_pokok" class="w-full border rounded px-2 py-1" required>
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-bold mb-1">Jam Lembur</label>
+                    <input type="number" name="jam_lembur" value="0" class="w-full border rounded px-2 py-1">
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-bold mb-1">Tarif Lembur (Per Jam)</label>
+                    <input type="number" name="tarif_lembur" value="0" class="w-full border rounded px-2 py-1">
+                </div>
+                <div class="mb-3">
+                    <label class="block text-sm font-bold mb-1">Potongan Kasbon</label>
+                    <input type="number" name="potongan_kasbon" value="0" class="w-full border rounded px-2 py-1">
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                    <button type="button" onclick="toggleModal()" class="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded">Batal</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Proses</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleModal() {
+        document.getElementById('payrollModal').classList.toggle('hidden');
+    }
+</script>
 @endsection

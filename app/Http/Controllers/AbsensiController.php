@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Absensi;
-use App\Models\Pegawai;
+use App\Models\User;
 
 class AbsensiController extends Controller
 {
@@ -13,14 +13,10 @@ class AbsensiController extends Controller
      */
     public function index()
     {
-        $absensi = Absensi::with('pegawai')->latest()->get();
+        $absensi = Absensi::with('user')->latest()->get();
+        $pegawai = User::where('role', 'karyawan')->get();
 
-        $pegawai = Pegawai::all();
-
-        return view('absensi.index', compact(
-            'absensi',
-            'pegawai'
-        ));
+        return view('absensi.index', compact('absensi', 'pegawai'));
     }
 
     /**
@@ -28,7 +24,7 @@ class AbsensiController extends Controller
      */
     public function create()
     {
-        $pegawais = Pegawai::all();
+        $pegawais = User::where('role', 'karyawan')->get();
 
         return view('absensi.create', compact('pegawais'));
     }
@@ -39,12 +35,12 @@ class AbsensiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pegawai_id' => 'required|exists:pegawais,id',
+            'user_id' => 'required|exists:users,id',
             'status' => 'required',
         ]);
 
         Absensi::create([
-            'pegawai_id' => $request->pegawai_id,
+            'user_id' => $request->user_id,
             'tanggal' => now()->toDateString(),
             'jam_masuk' => now()->format('H:i:s'),
             'status' => $request->status,
@@ -70,21 +66,6 @@ class AbsensiController extends Controller
     }
 
     /**
-     * Form edit
-     */
-    public function edit($id)
-    {
-        $absensi = Absensi::findOrFail($id);
-
-        $pegawais = Pegawai::all();
-
-        return view('absensi.edit', compact(
-            'absensi',
-            'pegawai'
-        ));
-    }
-
-    /**
      * Update absensi
      */
     public function update(Request $request, $id)
@@ -92,13 +73,13 @@ class AbsensiController extends Controller
         $absensi = Absensi::findOrFail($id);
 
         $request->validate([
-            'pegawai_id' => 'required',
-            'tanggal' => 'required',
+            'user_id' => 'required|exists:users,id',
+            'tanggal' => 'required|date',
             'status' => 'required',
         ]);
 
         $absensi->update([
-            'pegawai_id' => $request->pegawai_id,
+            'user_id' => $request->user_id,
             'tanggal' => $request->tanggal,
             'jam_masuk' => $request->jam_masuk,
             'jam_pulang' => $request->jam_pulang,
@@ -115,7 +96,6 @@ class AbsensiController extends Controller
     public function destroy($id)
     {
         $absensi = Absensi::findOrFail($id);
-
         $absensi->delete();
 
         return redirect()->route('absensi.index')

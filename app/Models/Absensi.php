@@ -9,10 +9,10 @@ class Absensi extends Model
 {
     use HasFactory;
 
-    protected $table = 'absensi';
+    protected $table = 'absensis';
 
     protected $fillable = [
-        'pegawai_id',
+        'user_id',
         'tanggal',
         'jam_masuk',
         'jam_pulang',
@@ -20,10 +20,10 @@ class Absensi extends Model
     ];
 
     /**
-     * Relasi ke pegawai
+     * Relasi ke user
      */
-    public function pegawai()
+    public function user()
     {
-        return $this->belongsTo(Pegawai::class, 'pegawai_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -1,55 +1,72 @@
-<h1>Data Absensi</h1>
+@extends('layouts.app')
 
-<a href="/absensi/create">Tambah Absensi</a>
+@section('content')
+<div class="bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Data Absensi</h2>
+        <a href="{{ route('absensi.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+            + Tambah Absensi
+        </a>
+    </div>
 
-<table border="1" cellpadding="10">
+    @if (session('success'))
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
 
-    <tr>
-        <th>pegawai_id</th>
-        <th>Nama Pegawai</th>
-        <th>Tanggal</th>
-        <th>Jam Masuk</th>
-        <th>Jam Pulang</th>
-        <th>Status</th>
-        <th>Aksi</th>
-    </tr>
-
-    @foreach($absensi as $absen)
-
-    <tr>
-
-        <td>{{ $loop->iteration }}</td>
-
-        <td>
-            {{ $absen->pegawai->nama ?? '-' }}
-        </td>
-
-        <td>{{ $absen->tanggal }}</td>
-
-        <td>{{ $absen->jam_masuk }}</td>
-
-        <td>{{ $absen->jam_pulang ?? '-' }}</td>
-
-        <td>{{ $absen->status }}</td>
-
-        <td>
-
-            @if(!$absen->jam_pulang)
-
-                <a href="{{ route('absensi.pulang', $absen->id) }}">
-                    Absen Pulang
-                </a>
-
-            @else
-
-                Selesai
-
-            @endif
-
-        </td>
-
-    </tr>
-
-    @endforeach
-
-</table>
+    <div class="overflow-x-auto">
+        <table class="min-w-full table-auto border-collapse">
+            <thead>
+                <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">No</th>
+                    <th class="py-3 px-6 text-left">Nama Pegawai</th>
+                    <th class="py-3 px-6 text-left">Tanggal</th>
+                    <th class="py-3 px-6 text-left">Jam Masuk</th>
+                    <th class="py-3 px-6 text-left">Jam Pulang</th>
+                    <th class="py-3 px-6 text-left">Status</th>
+                    <th class="py-3 px-6 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                @forelse ($absensi as $item)
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->iteration }}</td>
+                        <td class="py-3 px-6 text-left font-medium">{{ $item->user->name ?? '-' }}</td>
+                        <td class="py-3 px-6 text-left">{{ $item->tanggal }}</td>
+                        <td class="py-3 px-6 text-left">{{ $item->jam_masuk }}</td>
+                        <td class="py-3 px-6 text-left">{{ $item->jam_pulang ?? '-' }}</td>
+                        <td class="py-3 px-6 text-left">
+                            <span class="px-2 py-1 rounded text-xs font-bold bg-blue-100 text-blue-700">
+                                {{ $item->status }}
+                            </span>
+                        </td>
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex item-center justify-center gap-2">
+                                @if(!$item->jam_pulang)
+                                    <a href="{{ route('absensi.pulang', $item->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs font-bold">
+                                        Absen Pulang
+                                    </a>
+                                @else
+                                    <span class="text-green-600 font-bold">Selesai</span>
+                                @endif
+                                <form action="{{ route('absensi.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data absensi ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-900 font-bold ml-2">
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="py-6 text-center text-gray-500 italic">Data absensi belum tersedia.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+@endsection

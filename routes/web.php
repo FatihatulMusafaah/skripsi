@@ -24,159 +24,92 @@ Route::middleware(['guest'])->group(function (){
     Route::post('/',[SesiController::class,'login']);
 });
 
-Route::get('/login',[AdminController::class,'index']);
-
-
-    route::get('/Admin',[AdminController::class, 'index']);
-    route::get('/Admin/Admin',[AdminController::class, 'Admin'])->middleware('userAkses:Admin');
-    
-   
-    
-
-
 /*
 |--------------------------------------------------------------------------
 | DASHBOARD
 |--------------------------------------------------------------------------
 */
 
-Route::get('/dashboard', function () {
+Route::middleware(['auth'])->group(function() {
+    Route::get('/dashboard', function () {
+        $pegawai = User::where('role', 'karyawan')->latest()->get();
+        $totalPegawai = User::where('role', 'karyawan')->count();
 
-    $pegawai = User::where('role', 'karyawan')->latest()->get();
+        // Tambahkan variabel kosong/default ini agar view tidak error
+        $absensiHariIni = 0; 
+        $cutiHariIni = 0;
+        $totalKasbon = 0;
+        $totalGaji = 0;
 
-    $totalPegawai = User::where('role', 'karyawan')->count();
+        return view('dashboard', compact(
+            'pegawai',
+            'totalPegawai',
+            'absensiHariIni',
+            'cutiHariIni',
+            'totalKasbon',
+            'totalGaji'
+        )); 
+    })->name('dashboard');
 
-    // Tambahkan variabel kosong/default ini agar view tidak error
-    $absensiHariIni = 0; 
-    $cutiHariIni = 0;
-    $totalKasbon = 0;
-    $totalGaji = 0;
+    /*
+    |--------------------------------------------------------------------------
+    | CRUD PEGAWAI
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('pegawai', PegawaiController::class);
 
-    return view('dashboard', compact(
-        'pegawai',
-        'totalPegawai',
-        'absensiHariIni',
-        'cutiHariIni',
-        'totalKasbon',
-        'totalGaji'
-    )); 
+    /*
+    |--------------------------------------------------------------------------
+    | ABSENSI
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('absensi', AbsensiController::class);
+    Route::get('/absensi/pulang/{id}', [AbsensiController::class, 'pulang'])->name('absensi.pulang');
+
+    /*
+    |--------------------------------------------------------------------------
+    | CUTI
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('cuti', CutiController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENGGAJIAN
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/penggajian', [PenggajianController::class, 'index'])->name('penggajian.index');
+    Route::post('/penggajian/store', [PenggajianController::class, 'store'])->name('penggajian.store');
+
+    /*
+    |--------------------------------------------------------------------------
+    | KASBON
+    |--------------------------------------------------------------------------
+    */
+    Route::resource('kasbon', KasbonController::class);
+    Route::get('/riwayatkasbon', [RiwayatKasbonController::class, 'index'])->name('riwayat-kasbon.index');
+
+    /*
+    |--------------------------------------------------------------------------
+    | LAPORAN
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
     
-})->name('dashboard');
+    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+});
 
+// Admin-only routes (if any specific ones are needed later)
+Route::middleware(['auth', 'userAkses:admin'])->group(function() {
+    // Put admin-only routes here
+});
 
-/*
-|--------------------------------------------------------------------------
-| CRUD PEGAWAI
-|--------------------------------------------------------------------------
-*/
+// Owner-only routes
+Route::middleware(['auth', 'userAkses:owner'])->group(function() {
+    // Put owner-only routes here
+});
 
-Route::resource('pegawai', PegawaiController::class);
-
-
-/*
-|--------------------------------------------------------------------------
-| ABSENSI
-|--------------------------------------------------------------------------
-*/
-
-Route::resource('absensi', AbsensiController::class);
-
-Route::get(
-    '/absensi/pulang/{id}',
-    [AbsensiController::class, 'pulang']
-)->name('absensi.pulang');
-
-/*
-|--------------------------------------------------------------------------
-| CUTI
-|--------------------------------------------------------------------------
-*/
-
-Route::resource('cuti', CutiController::class);
-
-
-/*
-|--------------------------------------------------------------------------
-| PENGGAJIAN
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/penggajian', [PenggajianController::class, 'index'])->name('penggajian.index');
-Route::post('/penggajian/store', [PenggajianController::class, 'store'])->name('penggajian.store');
-
-
-/*
-|--------------------------------------------------------------------------
-| KASBON
-|--------------------------------------------------------------------------
-*/
-
-Route::resource('kasbon', KasbonController::class);
-
-
-Route::get('/riwayatkasbon', [RiwayatKasbonController::class, 'index'])
-    ->name('riwayat-kasbon.index');
-
-/*
-|--------------------------------------------------------------------------
-| LAPORAN
-|--------------------------------------------------------------------------
-*/
-
-Route::get('/laporan', [LaporanController::class, 'index'])
-    ->name('laporan.index');
-    
-Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
-
-route::get('/Admin/karyawan',[AdminController::class, 'karyawan'])->middleware('userAkses:karyawan');
-Route::middleware(['auth'])->group(function(){ });
-Route::get('/dashboardkaryawan', function () {
-
-    $pegawai = User::where('role', 'karyawan')->latest()->get();
-
-    $totalPegawai = User::where('role', 'karyawan')->count();
-
-    // Tambahkan variabel kosong/default ini agar view tidak error
-    $absensiHariIni = 0; 
-    $cutiHariIni = 0;
-    $totalKasbon = 0;
-    $totalGaji = 0;
-
-    return view('dashboard', compact(
-        'pegawai',
-        'totalPegawai',
-        'absensiHariIni',
-        'cutiHariIni',
-        'totalKasbon',
-        'totalGaji'
-    )); 
-    
-})->name('dashboard');
-
-
-
- route::get('/Admin/owner',[AdminController::class, 'owner'])->middleware('userAkses:owner');
-Route::middleware(['auth'])->group(function(){});
-
-Route::get('/dashboardkaryawan', function () {
-
-    $pegawai = User::where('role', 'karyawan')->latest()->get();
-
-    $totalPegawai = User::where('role', 'karyawan')->count();
-
-    // Tambahkan variabel kosong/default ini agar view tidak error
-    $absensiHariIni = 0; 
-    $cutiHariIni = 0;
-    $totalKasbon = 0;
-    $totalGaji = 0;
-
-    return view('dashboard', compact(
-        'pegawai',
-        'totalPegawai',
-        'absensiHariIni',
-        'cutiHariIni',
-        'totalKasbon',
-        'totalGaji'
-    )); 
-    
-})->name('dashboard');
+// Karyawan-only routes
+Route::middleware(['auth', 'userAkses:karyawan'])->group(function() {
+    // Put karyawan-only routes here
+});

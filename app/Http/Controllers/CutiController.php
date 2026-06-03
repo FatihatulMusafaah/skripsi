@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cuti;
-use App\Models\Pegawai;
+use App\Models\User;
 
 class CutiController extends Controller
 {
@@ -13,7 +13,7 @@ class CutiController extends Controller
      */
     public function index()
     {
-        $cuti = Cuti::with('pegawai')->latest()->get();
+        $cuti = Cuti::with('user')->latest()->get();
 
         return view('cuti.index', compact('cuti'));
     }
@@ -23,7 +23,7 @@ class CutiController extends Controller
      */
     public function create()
     {
-        $pegawai = Pegawai::all();
+        $pegawai = User::where('role', 'karyawan')->get();
 
         return view('cuti.create', compact('pegawai'));
     }
@@ -34,39 +34,25 @@ class CutiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-
-            'pegawai_id' => 'required',
-
-            'nama_pegawai' => 'required',
-
-            'tanggal_mulai' => 'required',
-
-            'tanggal_selesai' => 'required',
-
+            'user_id' => 'required|exists:users,id',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date',
             'alasan' => 'required',
-
         ]);
 
         Cuti::create([
-
-            'pegawai_id' => $request->pegawai_id,
-
-            'nama_pegawai' => $request->nama,
-
+            'user_id' => $request->user_id,
             'tanggal_mulai' => $request->tanggal_mulai,
-
             'tanggal_selesai' => $request->tanggal_selesai,
-
             'alasan' => $request->alasan,
-
             'status' => 'Pending'
-
         ]);
 
-        return redirect('/cuti')
+        return redirect()->route('cuti.index')
             ->with('success', 'Pengajuan cuti berhasil');
     }
-     public function update($id)
+
+    public function update(Request $request, $id)
     {
         $cuti = Cuti::findOrFail($id);
 
@@ -83,5 +69,4 @@ class CutiController extends Controller
 
         return back()->with('success', 'Data dihapus');
     }
-
 }

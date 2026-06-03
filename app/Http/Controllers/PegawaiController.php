@@ -13,7 +13,7 @@ class PegawaiController extends Controller
      */
     public function index()
     {
-        $pegawai = User::latest()->get();
+        $pegawai = User::where('role', 'karyawan')->latest()->get();
 
         return view('pegawai.index', compact('pegawai'));
     }
@@ -33,9 +33,13 @@ class PegawaiController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
+            'email' => 'required|string|email|max:255|unique:user',
             'password' => 'required|string|min:6',
             'role' => 'required|in:admin,owner,karyawan',
+            'jabatan' => 'nullable|string|max:255',
+            'no_hp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string',
+            'gaji_pokok' => 'nullable|numeric',
         ]);
 
         User::create([
@@ -43,6 +47,11 @@ class PegawaiController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            'jabatan' => $request->jabatan,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'gaji_pokok' => $request->gaji_pokok ?? 0,
+            'status' => 'aktif',
         ]);
 
         return redirect()->route('pegawai.index')
@@ -68,14 +77,24 @@ class PegawaiController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'email' => 'required|string|email|max:255|unique:user,email,' . $id,
             'role' => 'required|in:admin,owner,karyawan',
+            'jabatan' => 'nullable|string|max:255',
+            'no_hp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string',
+            'gaji_pokok' => 'nullable|numeric',
+            'status' => 'required|in:aktif,nonaktif',
         ]);
 
         $data = [
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
+            'jabatan' => $request->jabatan,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+            'gaji_pokok' => $request->gaji_pokok ?? 0,
+            'status' => $request->status,
         ];
 
         if ($request->filled('password')) {

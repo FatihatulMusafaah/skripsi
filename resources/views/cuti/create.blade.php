@@ -1,185 +1,46 @@
 @extends('layouts.app')
 
 @section('content')
-
-<div class="container py-4">
-
-    {{-- HEADER --}}
-    <div class="d-flex justify-content-between align-items-center mb-4">
-
-        <div>
-
-            <h2 class="fw-bold text-primary">
-                Pengajuan Cuti
-            </h2>
-
-        </div>
-
-        <a href="{{ route('cuti.index') }}"
-           class="btn btn-secondary rounded-pill">
-
-
-        </a>
-
+<div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Ajukan Cuti</h2>
+        <a href="{{ route('cuti.index') }}" class="text-blue-600 hover:text-blue-800 font-medium">&larr; Kembali</a>
     </div>
 
-    {{-- CARD --}}
-    <div class="card border-0 shadow-lg rounded-4">
+    <form action="{{ route('cuti.store') }}" method="POST">
+        @csrf
 
-        <div class="card-body p-5">
-
-            {{-- ERROR --}}
-            @if ($errors->any())
-
-                <div class="alert alert-danger">
-
-                    <ul class="mb-0">
-
-                        @foreach ($errors->all() as $error)
-
-                            <li>{{ $error }}</li>
-
-                        @endforeach
-
-                    </ul>
-
-                </div>
-
-            @endif
-
-            {{-- FORM --}}
-            <form action="{{ route('cuti.store') }}"
-                  method="POST">
-
-                @csrf
-
-                <div class="row">
-
-                      <div class="col-md-6 mb-4">
-                        <label class="form-label fw-semibold">
-                            pegawai_id
-                        </label>
-                        <textarea name="alasan"
-                                  rows= "1"
-                                  class= "form-control"
-                                  placeholder= "Masukkan id"></textarea>
-                    </div>
-
-                    {{-- PEGAWAI --}}
-                    <div class="col-md-6 mb-4">
-
-                        <select name="pegawai_id"
-                                class="form-select">
-
-                            <option value="">
-                                -- Pilih Pegawai --
-                            </option>
-
-                            @foreach($pegawai as $pegawai)
-
-                                <option value="{{ $pegawai->id }}">
-
-                                    {{ $pegawai->nama }}
-
-                                </option>
-
-                            @endforeach
-
-                        </select>
-
-                    </div>
-
-                  
-
-
-                    {{-- TANGGAL MULAI --}}
-                    <div class="col-md-6 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Tanggal Mulai
-                        </label>
-
-                        <input type="date"
-                               name="tanggal_mulai"
-                               class="form-control">
-
-                    </div>
-
-                    {{-- TANGGAL SELESAI --}}
-                    <div class="col-md-6 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Tanggal Selesai
-                        </label>
-
-                        <input type="date"
-                               name="tanggal_selesai"
-                               class="form-control">
-
-                    </div>
-
-                    
-                    {{-- STATUS --}}
-                    <div class="col-md-6 mb-4">
-                       
-
-                        <label class="form-label fw-semibold">
-                            Status
-                        </label>
-
-                        <select name="status"
-                                class="form-select">
-
-                            <option value="Menunggu">
-                                Menunggu
-                            </option>
-
-                            <option value="Disetujui">
-                                Disetujui
-                            </option>
-
-                            <option value="Ditolak">
-                                Ditolak
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                    {{-- ALASAN --}}
-                    <div class="col-md-12 mb-4">
-
-                        <label class="form-label fw-semibold">
-                            Alasan Cuti
-                        </label>
-
-                        <textarea name="alasan"
-                                  rows="5"
-                                  class="form-control"
-                                  placeholder="Masukkan alasan cuti"></textarea>
-
-                    </div>
-
-                    {{-- BUTTON --}}
-                    <div class="col-md-12">
-
-                        <button type="submit"
-                                class="btn btn-primary px-5 py-2 rounded-pill">
-
-                            Simpan Pengajuan
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </form>
-
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Pegawai</label>
+            <select name="user_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <option value="">-- Pilih Pegawai --</option>
+                @foreach ($pegawai as $p)
+                    <option value="{{ $p->id }}">{{ $p->name }}</option>
+                @endforeach
+            </select>
         </div>
 
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Tanggal Mulai</label>
+                <input type="date" name="tanggal_mulai" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Tanggal Selesai</label>
+                <input type="date" name="tanggal_selesai" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+        </div>
 
+        <div class="mb-6">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Alasan</label>
+            <textarea name="alasan" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Masukkan alasan cuti" required></textarea>
+        </div>
+
+        <div class="flex items-center justify-end">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline transition duration-200">
+                Kirim Pengajuan
+            </button>
+        </div>
+    </form>
 </div>
-
 @endsection

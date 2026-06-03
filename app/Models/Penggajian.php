@@ -2,27 +2,29 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Penggajian extends Model
 {
-    // 1. TAMBAHKAN BARIS INI UNTUK MENGUNCI NAMA TABEL
+    use HasFactory;
+
     protected $table = 'penggajian';
 
     protected $fillable = [
-        'pegawai_id',
-        'bulan',
+        'user_id',
         'gaji_pokok',
-        'jam_lembur',
-        'tarif_lembur',
-        'potongan_kasbon',
-        'potongan_lainnya',
+        'lembur',
+        'potongan',
         'total_gaji',
-        'keterangan'
+        'tanggal',
     ];
 
-    public function pegawai()
+    /**
+     * Relasi ke user
+     */
+    public function user()
     {
-        return $this->belongsTo(Pegawai::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

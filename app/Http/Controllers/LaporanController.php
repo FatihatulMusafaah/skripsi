@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pegawai;
+use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Absensi;
 use App\Models\Cuti;
 use App\Models\Kasbon;
@@ -10,25 +11,17 @@ use App\Models\Penggajian;
 
 class LaporanController extends Controller
 {
+    /**
+     * Tampilkan data laporan
+     */
     public function index()
     {
-        $pegawai = Pegawai::latest()->get();
+        $pegawai = User::where('role', 'karyawan')->latest()->get();
 
-        $absensi = Absensi::with('pegawai')
-            ->latest()
-            ->get();
-
-        $cuti = Cuti::with('pegawai')
-            ->latest()
-            ->get();
-
-        $kasbon = Kasbon::with('pegawai')
-            ->latest()
-            ->get();
-
-        $penggajian = Penggajian::with('pegawai')
-            ->latest()
-            ->get();
+        $absensi = Absensi::with('user')->latest()->get();
+        $cuti = Cuti::with('user')->latest()->get();
+        $kasbon = Kasbon::with('user')->latest()->get();
+        $penggajian = Penggajian::with('user')->latest()->get();
 
         return view('laporan.index', compact(
             'pegawai',

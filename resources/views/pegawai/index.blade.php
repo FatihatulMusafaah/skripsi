@@ -21,8 +21,10 @@
                 <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
                     <th class="py-3 px-6 text-left">No</th>
                     <th class="py-3 px-6 text-left">Nama</th>
+                    <th class="py-3 px-6 text-left">Jabatan</th>
                     <th class="py-3 px-6 text-left">Email</th>
-                    <th class="py-3 px-6 text-left">Role</th>
+                    <th class="py-3 px-6 text-left">No HP</th>
+                    <th class="py-3 px-6 text-left">Status</th>
                     <th class="py-3 px-6 text-center">Aksi</th>
                 </tr>
             </thead>
@@ -31,12 +33,12 @@
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->iteration }}</td>
                         <td class="py-3 px-6 text-left font-medium">{{ $item->name }}</td>
+                        <td class="py-3 px-6 text-left">{{ $item->jabatan ?? '-' }}</td>
                         <td class="py-3 px-6 text-left">{{ $item->email }}</td>
+                        <td class="py-3 px-6 text-left">{{ $item->no_hp ?? '-' }}</td>
                         <td class="py-3 px-6 text-left">
-                            <span class="px-2 py-1 rounded text-xs font-bold 
-                                {{ $item->role == 'admin' ? 'bg-purple-200 text-purple-700' : 
-                                   ($item->role == 'owner' ? 'bg-orange-200 text-orange-700' : 'bg-blue-200 text-blue-700') }}">
-                                {{ ucfirst($item->role) }}
+                            <span class="px-2 py-1 rounded text-xs font-bold {{ $item->status == 'aktif' ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700' }}">
+                                {{ ucfirst($item->status) }}
                             </span>
                         </td>
                         <td class="py-3 px-6 text-center">
@@ -56,7 +58,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="py-6 text-center text-gray-500 italic">Data pegawai belum tersedia.</td>
+                        <td colspan="7" class="py-6 text-center text-gray-500 italic">Data pegawai belum tersedia.</td>
                     </tr>
                 @endforelse
             </tbody>

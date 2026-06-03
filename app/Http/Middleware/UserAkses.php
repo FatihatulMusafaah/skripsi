@@ -16,10 +16,10 @@ class UserAkses
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
-        if (Auth()->user()->role ==$role ){
+        if (Auth::check() && strtolower(Auth::user()->role) == strtolower($role)){
             return $next($request);
-
         }
-        return redirect('Admin');
+        
+        return redirect()->route('login')->withErrors('Anda tidak memiliki akses ke halaman ini.');
     }
 }

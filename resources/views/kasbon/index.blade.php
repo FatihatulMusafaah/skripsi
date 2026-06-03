@@ -1,46 +1,69 @@
-<h1>Data Kasbon</h1>
+@extends('layouts.app')
 
-<a href="/kasbon/create">Tambah Kasbon</a>
+@section('content')
+<div class="bg-white p-8 rounded-lg shadow-md">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Daftar Kasbon</h2>
+        <a href="{{ route('kasbon.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">
+            + Tambah Kasbon
+        </a>
+    </div>
 
-<table border="1" cellpadding="10">
+    @if (session('success'))
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+            <p>{{ session('success') }}</p>
+        </div>
+    @endif
 
-    <tr>
-        <th>No</th>
-        <th>Nama Pegawai</th>
-        <th>Jumlah Kasbon</th>
-        <th>Metode</th>
-        <th>Sisa Kasbon</th>
-        <th>Status</th>
-    </tr>
-
-    @foreach($kasbon as $kasbon)
-
-    <tr>
-
-        <td>{{ $loop->iteration }}</td>
-
-        <td>
-            {{ $kasbon->pegawai->nama ?? '-' }}
-        </td>
-
-        <td>
-            Rp {{ number_format($kasbon->jumlah_kasbon) }}
-        </td>
-
-        <td>
-            {{ $kasbon->metode_pembayaran }}
-        </td>
-
-        <td>
-            Rp {{ number_format($kasbon->sisa_kasbon) }}
-        </td>
-
-        <td>
-            {{ $kasbon->status }}
-        </td>
-
-    </tr>
-
-    @endforeach
-
-</table>
+    <div class="overflow-x-auto">
+        <table class="min-w-full table-auto border-collapse">
+            <thead>
+                <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                    <th class="py-3 px-6 text-left">No</th>
+                    <th class="py-3 px-6 text-left">Nama Pegawai</th>
+                    <th class="py-3 px-6 text-left">Jumlah</th>
+                    <th class="py-3 px-6 text-left">Metode</th>
+                    <th class="py-3 px-6 text-left">Sisa</th>
+                    <th class="py-3 px-6 text-left">Status</th>
+                    <th class="py-3 px-6 text-center">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                @forelse ($kasbon as $item)
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->iteration }}</td>
+                        <td class="py-3 px-6 text-left font-medium">{{ $item->user->name ?? '-' }}</td>
+                        <td class="py-3 px-6 text-left">Rp {{ number_format($item->jumlah_kasbon, 0, ',', '.') }}</td>
+                        <td class="py-3 px-6 text-left">{{ $item->metode_pembayaran }}</td>
+                        <td class="py-3 px-6 text-left">Rp {{ number_format($item->sisa_kasbon, 0, ',', '.') }}</td>
+                        <td class="py-3 px-6 text-left">
+                            <span class="px-2 py-1 rounded text-xs font-bold 
+                                {{ $item->status == 'Lunas' ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700' }}">
+                                {{ $item->status }}
+                            </span>
+                        </td>
+                        <td class="py-3 px-6 text-center">
+                            <div class="flex item-center justify-center gap-2">
+                                <a href="{{ route('kasbon.edit', $item->id) }}" class="text-blue-600 hover:text-blue-900 font-bold">
+                                    Edit
+                                </a>
+                                <form action="{{ route('kasbon.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data kasbon ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-600 hover:text-red-900 font-bold">
+                                        Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="py-6 text-center text-gray-500 italic">Data kasbon belum tersedia.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+@endsection

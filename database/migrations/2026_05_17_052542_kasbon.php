@@ -9,28 +9,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kasbon', function (Blueprint $table) {
-
             $table->id();
 
-            $table->foreignId('pegawai_id')
-                ->constrained('pegawai')
+            $table->foreignId('user_id')
+                ->constrained('user')
                 ->onDelete('cascade');
 
             $table->bigInteger('jumlah_kasbon');
-
-            $table->enum('metode_pembayaran', [
-                'Sekali Bayar',
-                'Cicilan'
-            ]);
-
-            $table->bigInteger('jumlah_cicilan')
-                ->default(0);
-
+            $table->enum('metode_pembayaran', ['Sekali Bayar', 'Cicilan']);
+            $table->bigInteger('jumlah_cicilan')->default(0);
             $table->bigInteger('sisa_kasbon');
-
-            $table->string('status')
-                ->default('Belum Lunas');
-
+            $table->string('status')->default('Belum Lunas');
             $table->timestamps();
         });
     }

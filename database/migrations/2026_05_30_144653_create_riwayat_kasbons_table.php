@@ -11,18 +11,15 @@ return new class extends Migration
         Schema::create('riwayat_kasbon', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('pegawai_id');
+            $table->foreignId('user_id')
+                ->constrained('user')
+                ->onDelete('cascade');
 
             $table->decimal('total_kasbon', 15, 2)->default(0);
             $table->decimal('kasbon_dibayar', 15, 2)->default(0);
             $table->decimal('sisa_kasbon', 15, 2)->default(0);
 
             $table->timestamps();
-
-            $table->foreign('pegawai_id')
-                ->references('id')
-                ->on('pegawai')
-                ->onDelete('cascade');
         });
     }
 

@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -12,16 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
-        if (!Schema::hasTable('users')) {
-
-            Schema::create('users', function (Blueprint $table) {
-
+        if (!Schema::hasTable('user')) {
+            Schema::create('user', function (Blueprint $table) {
                 $table->id();
-
                 $table->string('name');
-
                 $table->string('email')->unique();
+                $table->timestamp('email_verified_at')->nullable();
+                $table->string('password');
+                
+                // Fields from Pegawai
+                $table->string('jabatan')->nullable();
+                $table->string('no_hp')->nullable();
+                $table->text('alamat')->nullable();
+                $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
+                $table->bigInteger('gaji_pokok')->default(0);
 
                 // ROLE USER
                 $table->enum('role', [
@@ -30,12 +33,7 @@ return new class extends Migration
                     'karyawan'
                 ])->default('karyawan');
 
-                $table->timestamp('email_verified_at')->nullable();
-
-                $table->string('password');
-
                 $table->rememberToken();
-
                 $table->timestamps();
             });
         }

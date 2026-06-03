@@ -1,310 +1,67 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="bg-white p-8 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Laporan Sistem Informasi Kepegawaian</h2>
 
-<div class="container py-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {{-- LAPORAN PEGAWAI --}}
+        <div class="border p-4 rounded-lg shadow-sm">
+            <h3 class="text-xl font-bold text-blue-700 mb-3 border-b pb-2">Daftar Pegawai</h3>
+            <ul class="space-y-2">
+                @foreach($pegawai as $p)
+                    <li class="flex justify-between text-sm">
+                        <span>{{ $p->name }}</span>
+                        <span class="text-gray-500 italic">{{ $p->jabatan ?? 'Karyawan' }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
 
-    {{-- HEADER --}}
-    <div class="mb-5">
+        {{-- LAPORAN ABSENSI --}}
+        <div class="border p-4 rounded-lg shadow-sm">
+            <h3 class="text-xl font-bold text-green-700 mb-3 border-b pb-2">Aktivitas Absensi</h3>
+            <ul class="space-y-2">
+                @foreach($absensi->take(10) as $a)
+                    <li class="flex justify-between text-sm">
+                        <span>{{ $a->user->name ?? '-' }}</span>
+                        <span class="text-gray-500">{{ $a->tanggal }} ({{ $a->status }})</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
 
-        <h1 class="fw-bold text-primary">
-            Laporan Sistem Informasi Kepegawaian
-        </h1>
+        {{-- LAPORAN KASBON --}}
+        <div class="border p-4 rounded-lg shadow-sm">
+            <h3 class="text-xl font-bold text-red-700 mb-3 border-b pb-2">Kasbon Terakhir</h3>
+            <ul class="space-y-2">
+                @foreach($kasbon->take(10) as $k)
+                    <li class="flex justify-between text-sm">
+                        <span>{{ $k->user->name ?? '-' }}</span>
+                        <span class="font-bold text-red-600">Rp {{ number_format($k->jumlah_kasbon, 0, ',', '.') }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
 
+        {{-- LAPORAN PENGGAJIAN --}}
+        <div class="border p-4 rounded-lg shadow-sm">
+            <h3 class="text-xl font-bold text-purple-700 mb-3 border-b pb-2">Penggajian Terakhir</h3>
+            <ul class="space-y-2">
+                @foreach($penggajian->take(10) as $g)
+                    <li class="flex justify-between text-sm">
+                        <span>{{ $g->user->name ?? '-' }}</span>
+                        <span class="font-bold text-green-600">Rp {{ number_format($g->total_gaji, 0, ',', '.') }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
     </div>
 
-    {{-- DATA PEGAWAI --}}
-    <div class="card shadow border-0 mb-5">
-
-        <div class="card-header bg-primary text-white">
-
-            <h5 class="mb-0">
-                Data Pegawai
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <table class="table table-bordered table-hover">
-
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th>No</th>
-                        <th>Nama</th>
-                        <th>Email</th>
-                        <th>Jabatan</th>
-                        <th>No HP</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @foreach($pegawai as $pegawai)
-
-                    <tr>
-
-                        <td>{{ $loop->iteration }}</td>
-
-                        <td>{{ $pegawai->nama }}</td>
-
-                        <td>{{ $pegawai->email }}</td>
-
-                        <td>{{ $pegawai->jabatan }}</td>
-
-                        <td>{{ $pegawai->no_hp }}</td>
-
-                    </tr>
-
-                    @endforeach
-
-                </tbody>
-
-            </table>
-
-        </div>
-
+    <div class="mt-10 text-center">
+        <button onclick="window.print()" class="bg-gray-800 hover:bg-black text-white px-8 py-2 rounded-lg font-bold transition">
+            Cetak Laporan (PDF)
+        </button>
     </div>
-
-    {{-- DATA ABSENSI --}}
-    <div class="card shadow border-0 mb-5">
-
-        <div class="card-header bg-success text-white">
-
-            <h5 class="mb-0">
-                Data Absensi
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <table class="table table-bordered table-hover">
-
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th>No</th>
-                        <th>Nama Pegawai</th>
-                        <th>Tanggal</th>
-                        <th>Jam Masuk</th>
-                        <th>Jam Pulang</th>
-                        <th>Status</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @foreach($absensi as $absen)
-
-                    <tr>
-
-                        <td>{{ $loop->iteration }}</td>
-
-                        <td>{{ $absen->pegawai->nama ?? '-' }}</td>
-
-                        <td>{{ $absen->tanggal }}</td>
-
-                        <td>{{ $absen->jam_masuk }}</td>
-
-                        <td>{{ $absen->jam_pulang ?? '-' }}</td>
-
-                        <td>{{ $absen->status }}</td>
-
-                    </tr>
-
-                    @endforeach
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-    {{-- DATA CUTI --}}
-    <div class="card shadow border-0 mb-5">
-
-        <div class="card-header bg-warning">
-
-            <h5 class="mb-0">
-                Data Cuti
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <table class="table table-bordered table-hover">
-
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th>No</th>
-                        <th>Nama Pegawai</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Tanggal Selesai</th>
-                        <th>Alasan</th>
-                        <th>Status</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @foreach($cuti as $cuti)
-
-                    <tr>
-
-                        <td>{{ $loop->iteration }}</td>
-
-                        <td>{{ $cuti->pegawai->nama ?? '-' }}</td>
-
-                        <td>{{ $cuti->tanggal_mulai }}</td>
-
-                        <td>{{ $cuti->tanggal_selesai }}</td>
-
-                        <td>{{ $cuti->alasan }}</td>
-
-                        <td>{{ $cuti->status }}</td>
-
-                    </tr>
-
-                    @endforeach
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-    {{-- DATA KASBON --}}
-    <div class="card shadow border-0 mb-5">
-
-        <div class="card-header bg-danger text-white">
-
-            <h5 class="mb-0">
-                Data Kasbon
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <table class="table table-bordered table-hover">
-
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th>No</th>
-                        <th>Nama Pegawai</th>
-                        <th>Jumlah Kasbon</th>
-                        <th>Metode</th>
-                        <th>Status</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @foreach($kasbon as $kasbon)
-
-                    <tr>
-
-                        <td>{{ $loop->iteration }}</td>
-
-                        <td>{{ $kasbon->pegawai->nama ?? '-' }}</td>
-
-                        <td>
-                            Rp {{ number_format($kasbon->jumlah_kasbon) }}
-                        </td>
-
-                        <td>{{ $kasbon->metode_pembayaran }}</td>
-
-                        <td>{{ $kasbon->status }}</td>
-
-                    </tr>
-
-                    @endforeach
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-    {{-- DATA PENGGAJIAN --}}
-    <div class="card shadow border-0 mb-5">
-
-        <div class="card-header bg-info text-white">
-
-            <h5 class="mb-0">
-                Data Penggajian
-            </h5>
-
-        </div>
-
-        <div class="card-body">
-
-            <table class="table table-bordered table-hover">
-
-                <thead class="table-light">
-
-                    <tr>
-
-                        <th>No</th>
-                        <th>Nama Pegawai</th>
-                        <th>Bulan</th>
-                        <th>Total Gaji</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    @foreach($penggajian as $gaji)
-
-                    <tr>
-
-                        <td>{{ $loop->iteration }}</td>
-
-                        <td>{{ $gaji->pegawai->nama ?? '-' }}</td>
-
-                        <td>{{ $gaji->bulan }}</td>
-
-                        <td>
-                            Rp {{ number_format($gaji->total_gaji) }}
-                        </td>
-
-                    </tr>
-
-                    @endforeach
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
 </div>
-
 @endsection

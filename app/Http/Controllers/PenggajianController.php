@@ -3,50 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Models\Penggajian;
-use App\Models\Pegawai;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PenggajianController extends Controller
 {
     public function index()
     {
-        $penggajian = Penggajian::with('pegawai')->latest()->get();
+        $penggajian = Penggajian::with('user')->latest()->get();
+        $pegawai = User::where('role', 'karyawan')->get();
 
-        $pegawai = Pegawai::all();
-
-        return view('penggajian.index', compact(
-            'penggajian',
-            'pegawai'
-        ));
+        return view('penggajian.index', compact('penggajian', 'pegawai'));
     }
 
     public function store(Request $request)
     {
-        $gaji =
-            $request->gaji_pokok +
-            ($request->jam_lembur * $request->tarif_lembur);
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'bulan' => 'required',
+            'gaji_pokok' => 'required|numeric',
+            'jam_lembur' => 'nullable|numeric',
+            'tarif_lembur' => 'nullable|numeric',
+            'potongan_kasbon' => 'nullable|numeric',
+            'potongan_lainnya' => 'nullable|numeric',
+        ]);
 
-        $potongan =
-            $request->potongan_bpjs +
-            $request->potongan_kasbon +
-            $request->potongan_lainnya;
-
+        $gaji = $request->gaji_pokok + ($request->jam_lembur * ($request->tarif_lembur ?? 0));
+        $potongan = ($request->potongan_bpjs ?? 0) + ($request->potongan_kasbon ?? 0) + ($request->potongan_lainnya ?? 0);
         $total = $gaji - $potongan;
 
         Penggajian::create([
-            'pegawai_id' => $request->pegawai_id,
-            'bulan' => $request->bulan,
+            'user_id' => $request->user_id,
             'gaji_pokok' => $request->gaji_pokok,
-            'jam_lembur' => $request->jam_lembur,
-            'tarif_lembur' => $request->tarif_lembur,
-            'potongan_kasbon' => $request->potongan_kasbon,
-            'potongan_lainnya' => $request->potongan_lainnya,
+            'lembur' => ($request->jam_lembur * ($request->tarif_lembur ?? 0)),
+            'potongan' => $potongan,
             'total_gaji' => $total,
-            'keterangan' => $request->keterangan,
+            'tanggal' => now(), // Assuming current date for simplicity or use specific field
         ]);
 
-        return redirect()
-            ->back()
-            ->with('success', 'Penggajian berhasil diproses');
+        return redirect()->back()->with('success', 'Penggajian berhasil diproses');
     }
 }

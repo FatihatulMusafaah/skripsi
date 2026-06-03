@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Kasbon;
-use App\Models\Pegawai;
+use App\Models\User;
 
 class KasbonController extends Controller
 {
@@ -13,9 +13,7 @@ class KasbonController extends Controller
      */
     public function index()
     {
-        $kasbon = Kasbon::with('pegawai')
-            ->latest()
-            ->get();
+        $kasbon = Kasbon::with('user')->latest()->get();
 
         return view('kasbon.index', compact('kasbon'));
     }
@@ -25,7 +23,7 @@ class KasbonController extends Controller
      */
     public function create()
     {
-        $pegawai = Pegawai::all();
+        $pegawai = User::where('role', 'karyawan')->get();
 
         return view('kasbon.create', compact('pegawai'));
     }
@@ -36,17 +34,17 @@ class KasbonController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'pegawai_id'         => 'required|exists:pegawai,id',
-            'jumlah_kasbon'      => 'required|numeric',
-            'metode_pembayaran'  => 'required',
+            'user_id' => 'required|exists:users,id',
+            'jumlah_kasbon' => 'required|numeric',
+            'metode_pembayaran' => 'required|in:Sekali Bayar,Cicilan',
         ]);
 
         Kasbon::create([
-            'pegawai_id'         => $request->pegawai_id,
-            'jumlah_kasbon'      => $request->jumlah_kasbon,
-            'metode_pembayaran'  => $request->metode_pembayaran,
-            
-           
+            'user_id' => $request->user_id,
+            'jumlah_kasbon' => $request->jumlah_kasbon,
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'sisa_kasbon' => $request->jumlah_kasbon,
+            'status' => 'Belum Lunas'
         ]);
 
         return redirect()->route('kasbon.index')
@@ -59,13 +57,9 @@ class KasbonController extends Controller
     public function edit($id)
     {
         $kasbon = Kasbon::findOrFail($id);
+        $pegawai = User::where('role', 'karyawan')->get();
 
-        $pegawai = Pegawai::all();
-
-        return view('kasbon.edit', compact(
-            'kasbon',
-            'pegawai'
-        ));
+        return view('kasbon.edit', compact('kasbon', 'pegawai'));
     }
 
     /**
@@ -76,19 +70,15 @@ class KasbonController extends Controller
         $kasbon = Kasbon::findOrFail($id);
 
         $request->validate([
-            'pegawai_id'         => 'required',
-            'jumlah_kasbon'      => 'required',
-            'metode_pembayaran'  => 'required',
-             
-
+            'user_id' => 'required|exists:users,id',
+            'jumlah_kasbon' => 'required|numeric',
+            'metode_pembayaran' => 'required|in:Sekali Bayar,Cicilan',
         ]);
 
         $kasbon->update([
-            'pegawai_id'         => $request->pegawai_id,
-            'jumlah_kasbon'      => $request->jumlah_kasbon,
-            'metode_pembayaran'  => $request->metode_pembayaran,
-            
-        
+            'user_id' => $request->user_id,
+            'jumlah_kasbon' => $request->jumlah_kasbon,
+            'metode_pembayaran' => $request->metode_pembayaran,
         ]);
 
         return redirect()->route('kasbon.index')
@@ -101,7 +91,6 @@ class KasbonController extends Controller
     public function destroy($id)
     {
         $kasbon = Kasbon::findOrFail($id);
-
         $kasbon->delete();
 
         return redirect()->route('kasbon.index')
