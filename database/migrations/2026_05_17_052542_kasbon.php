@@ -6,47 +6,35 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('kasbon', function (Blueprint $table) {
 
             $table->id();
 
-            // // RELASI KE PEGAWAI
-            // $table->foreignId('pegawai_id')
-            //       ->constrained('pegawais')
-            //       ->onDelete('cascade');
+            $table->foreignId('pegawai_id')
+                ->constrained('pegawai')
+                ->onDelete('cascade');
 
-            $table->string('pegawai_id');
+            $table->bigInteger('jumlah_kasbon');
 
-        
-
-            // JUMLAH KASBON
-            $table->decimal('jumlah_kasbon', 12, 2);
-
-            // METODE PEMBAYARAN
             $table->enum('metode_pembayaran', [
-
-                'cicil_30',
-                'sekali_bayar'
-
+                'Sekali Bayar',
+                'Cicilan'
             ]);
 
-            $table->timestamps();
+            $table->bigInteger('jumlah_cicilan')
+                ->default(0);
 
-            $table->foreign('pegawai_id')
-              ->references('id')
-              ->on('pegawai')
-              ->onDelete('cascade');
+            $table->bigInteger('sisa_kasbon');
+
+            $table->string('status')
+                ->default('Belum Lunas');
+
+            $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('kasbon');

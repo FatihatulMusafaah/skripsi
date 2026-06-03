@@ -31,14 +31,13 @@ class SesiController extends Controller
 
         // 3. Proses otentikasi ke database
         if (Auth::attempt($infologin)) {
-            // Jika login sukses, cek role user dan arahkan ke dashboard
-            if (Auth::user()->role == 'admin') {
-                return redirect('/dashboard')->with('success', 'Selamat Datang Admin');
-            } elseif (Auth::user()->role == 'karyawan') {
-                return redirect('/dashboard')->with('success', 'Selamat Datang Karyawan');
-            } elseif (Auth::user()->role == 'owner') {
-                return redirect('/dashboard')->with('success', 'Selamat Datang Owner');
-            }
+           if (Auth::user()->role == 'Admin'){
+            return redirect('/Admin');
+           }elseif (Auth::user()->role == 'karyawan'){
+            return redirect('Admin/karyawan');
+           }elseif (Auth::user()->role == 'owner'){
+            return redirect('Admin/owner');
+           }
         } else {
             // Jika email atau password salah, kembali ke login dengan pesan error
             return redirect('')->withErrors('Email atau password yang Anda masukkan salah')->withInput();
@@ -46,7 +45,7 @@ class SesiController extends Controller
     }
 
     // 4. Fungsi tambahan untuk logout
-    public function logout()
+    function logout()
     {
         Auth::logout();
         return redirect('')->with('success', 'Berhasil logout');

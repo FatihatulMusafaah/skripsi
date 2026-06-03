@@ -12,18 +12,18 @@ class Kasbon extends Model
     protected $table = 'kasbon';
 
     protected $fillable = [
- 
         'pegawai_id',
         'jumlah_kasbon',
         'metode_pembayaran',
+       
 
     ];
 
     /**
-     * RELASI KE PEGAWAI
+     * Relasi ke pegawai
      */
     public function pegawai()
     {
-        return $this->belongsTo(Pegawai::class);
+        return $this->belongsTo(Pegawai::class, 'pegawai_id');
     }
 }

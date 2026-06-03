@@ -8,17 +8,20 @@
 
 <table border="1">
 <tr>
+    ,<th>id</th>
     <th>Nama</th>
-    <th>Tanggal</th>
+    <th>tanggal_mulai</th>
+    <th>tanggal_selesai</th>
     <th>Alasan</th>
     <th>Status</th>
-    <th>Aksi</th>
 </tr>
 
 @foreach($cuti as $c)
 <tr>
+    <td>{{$c ->id }}</td>
     <td>{{ $c->nama_pegawai }}</td>
-    <td>{{ $c->tanggal_mulai }} - {{ $c->tanggal_selesai }}</td>
+    <td>{{ $c->tanggal_mulai }} -
+         {{ $c->tanggal_selesai }}</td>
     <td>{{ $c->alasan }}</td>
     <td>{{ $c->status }}</td>
     <td>

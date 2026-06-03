@@ -6,38 +6,31 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('absensi', function (Blueprint $table) {
-        $table->id();
+        Schema::create('absensis', function (Blueprint $table) {
 
-        $table->string('pegawai_id');
+            $table->id();
 
-        
+            $table->foreignId('pegawai_id')
+                ->constrained('pegawais')
+                ->onDelete('cascade');
 
-        $table->string('nama_pegawai');
-        $table->date('tanggal');
-        $table->time('jam_masuk')->nullable();
-        $table->time('jam_keluar')->nullable();
-        $table->enum('status', ['hadir', 'izin', 'sakit', 'alpha'])->default('hadir');
-        $table->timestamps();
+            $table->date('tanggal');
 
-        $table->foreign('pegawai_id')
-              ->references('id')
-              ->on('pegawai')
-              ->onDelete('cascade');
-    });
+            $table->time('jam_masuk');
+
+            $table->time('jam_pulang')
+                ->nullable();
+
+            $table->string('status');
+
+            $table->timestamps();
+        });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('absensi');
-
+        Schema::dropIfExists('absensis');
     }
 };

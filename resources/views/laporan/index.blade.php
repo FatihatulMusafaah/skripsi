@@ -1,151 +1,310 @@
-<x-app-layout>
+@extends('layouts.app')
 
-<div class="p-6">
+@section('content')
 
-    <h1 class="text-3xl font-bold mb-6">
-        Laporan Sistem Informasi Kepegawaian
-    </h1>
+<div class="container py-4">
 
-    <!-- Statistik -->
-    <div class="grid grid-cols-5 gap-4 mb-8">
+    {{-- HEADER --}}
+    <div class="mb-5">
 
-        <div class="bg-blue-500 text-white p-4 rounded">
-            <h2>Total Pegawai</h2>
-            <p class="text-2xl">{{ $totalPegawai }}</p>
+        <h1 class="fw-bold text-primary">
+            Laporan Sistem Informasi Kepegawaian
+        </h1>
+
+    </div>
+
+    {{-- DATA PEGAWAI --}}
+    <div class="card shadow border-0 mb-5">
+
+        <div class="card-header bg-primary text-white">
+
+            <h5 class="mb-0">
+                Data Pegawai
+            </h5>
+
         </div>
 
-        <div class="bg-green-500 text-white p-4 rounded">
-            <h2>Total Absensi</h2>
-            <p class="text-2xl">{{ $totalAbsensi }}</p>
-        </div>
+        <div class="card-body">
 
-        <div class="bg-yellow-500 text-white p-4 rounded">
-            <h2>Total Cuti</h2>
-            <p class="text-2xl">{{ $totalCuti }}</p>
-        </div>
+            <table class="table table-bordered table-hover">
 
-        <div class="bg-purple-500 text-white p-4 rounded">
-            <h2>Total Penggajian</h2>
-            <p class="text-2xl">{{ $totalPenggajian }}</p>
-        </div>
+                <thead class="table-light">
 
-        <div class="bg-red-500 text-white p-4 rounded">
-            <h2>Total Kasbon</h2>
-            <p class="text-2xl">{{ $totalKasbon }}</p>
+                    <tr>
+
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Jabatan</th>
+                        <th>No HP</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach($pegawai as $pegawai)
+
+                    <tr>
+
+                        <td>{{ $loop->iteration }}</td>
+
+                        <td>{{ $pegawai->nama }}</td>
+
+                        <td>{{ $pegawai->email }}</td>
+
+                        <td>{{ $pegawai->jabatan }}</td>
+
+                        <td>{{ $pegawai->no_hp }}</td>
+
+                    </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
         </div>
 
     </div>
 
-    <!-- DATA PEGAWAI -->
-    <div class="bg-white shadow rounded p-4 mb-8">
+    {{-- DATA ABSENSI --}}
+    <div class="card shadow border-0 mb-5">
 
-        <h2 class="text-xl font-bold mb-4">
-            Data Pegawai
-        </h2>
+        <div class="card-header bg-success text-white">
 
-        <table class="w-full border">
+            <h5 class="mb-0">
+                Data Absensi
+            </h5>
 
-            <tr class="bg-gray-200">
-                <th class="border p-2">Nama</th>
-                <th class="border p-2">Jabatan</th>
-                <th class="border p-2">No HP</th>
-            </tr>
+        </div>
 
-            @foreach($pegawai as $p)
-            <tr>
-                <td class="border p-2">
-                    {{ $p->nama }}
-                </td>
+        <div class="card-body">
 
-                <td class="border p-2">
-                    {{ $p->jabatan }}
-                </td>
+            <table class="table table-bordered table-hover">
 
-                <td class="border p-2">
-                    {{ $p->no_hp }}
-                </td>
-            </tr>
-            @endforeach
+                <thead class="table-light">
 
-        </table>
+                    <tr>
 
-    </div>
+                        <th>No</th>
+                        <th>Nama Pegawai</th>
+                        <th>Tanggal</th>
+                        <th>Jam Masuk</th>
+                        <th>Jam Pulang</th>
+                        <th>Status</th>
 
-    <!-- DATA ABSENSI -->
-    <div class="bg-white shadow rounded p-4 mb-8">
+                    </tr>
 
-        <h2 class="text-xl font-bold mb-4">
-            Data Absensi
-        </h2>
+                </thead>
 
-        <table class="w-full border">
+                <tbody>
 
-            <tr class="bg-gray-200">
-                <th class="border p-2">Nama</th>
-                <th class="border p-2">Tanggal</th>
-                <th class="border p-2">Status</th>
-            </tr>
+                    @foreach($absensi as $absen)
 
-            @foreach($absensi as $a)
-            <tr>
-                <td class="border p-2">
-                    {{ $a->nama_pegawai }}
-                </td>
+                    <tr>
 
-                <td class="border p-2">
-                    {{ $a->tanggal }}
-                </td>
+                        <td>{{ $loop->iteration }}</td>
 
-                <td class="border p-2">
-                    {{ $a->status }}
-                </td>
-            </tr>
-            @endforeach
+                        <td>{{ $absen->pegawai->nama ?? '-' }}</td>
 
-        </table>
+                        <td>{{ $absen->tanggal }}</td>
+
+                        <td>{{ $absen->jam_masuk }}</td>
+
+                        <td>{{ $absen->jam_pulang ?? '-' }}</td>
+
+                        <td>{{ $absen->status }}</td>
+
+                    </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     </div>
 
-    <!-- DATA CUTI -->
-    <div class="bg-white shadow rounded p-4 mb-8">
+    {{-- DATA CUTI --}}
+    <div class="card shadow border-0 mb-5">
 
-        <h2 class="text-xl font-bold mb-4">
-            Data Cuti
-        </h2>
+        <div class="card-header bg-warning">
 
-        <table class="w-full border">
+            <h5 class="mb-0">
+                Data Cuti
+            </h5>
 
-            <tr class="bg-gray-200">
-                <th class="border p-2">Nama</th>
-                <th class="border p-2">Tanggal Mulai</th>
-                <th class="border p-2">Tanggal Selesai</th>
-                <th class="border p-2">Status</th>
-            </tr>
+        </div>
 
-            @foreach($cuti as $c)
-            <tr>
-                <td class="border p-2">
-                    {{ $c->nama_pegawai }}
-                </td>
+        <div class="card-body">
 
-                <td class="border p-2">
-                    {{ $c->tanggal_mulai }}
-                </td>
+            <table class="table table-bordered table-hover">
 
-                <td class="border p-2">
-                    {{ $c->tanggal_selesai }}
-                </td>
+                <thead class="table-light">
 
-                <td class="border p-2">
-                    {{ $c->status }}
-                </td>
-            </tr>
-            @endforeach
+                    <tr>
 
-        </table>
+                        <th>No</th>
+                        <th>Nama Pegawai</th>
+                        <th>Tanggal Mulai</th>
+                        <th>Tanggal Selesai</th>
+                        <th>Alasan</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach($cuti as $cuti)
+
+                    <tr>
+
+                        <td>{{ $loop->iteration }}</td>
+
+                        <td>{{ $cuti->pegawai->nama ?? '-' }}</td>
+
+                        <td>{{ $cuti->tanggal_mulai }}</td>
+
+                        <td>{{ $cuti->tanggal_selesai }}</td>
+
+                        <td>{{ $cuti->alasan }}</td>
+
+                        <td>{{ $cuti->status }}</td>
+
+                    </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {{-- DATA KASBON --}}
+    <div class="card shadow border-0 mb-5">
+
+        <div class="card-header bg-danger text-white">
+
+            <h5 class="mb-0">
+                Data Kasbon
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>No</th>
+                        <th>Nama Pegawai</th>
+                        <th>Jumlah Kasbon</th>
+                        <th>Metode</th>
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach($kasbon as $kasbon)
+
+                    <tr>
+
+                        <td>{{ $loop->iteration }}</td>
+
+                        <td>{{ $kasbon->pegawai->nama ?? '-' }}</td>
+
+                        <td>
+                            Rp {{ number_format($kasbon->jumlah_kasbon) }}
+                        </td>
+
+                        <td>{{ $kasbon->metode_pembayaran }}</td>
+
+                        <td>{{ $kasbon->status }}</td>
+
+                    </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    {{-- DATA PENGGAJIAN --}}
+    <div class="card shadow border-0 mb-5">
+
+        <div class="card-header bg-info text-white">
+
+            <h5 class="mb-0">
+                Data Penggajian
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <table class="table table-bordered table-hover">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>No</th>
+                        <th>Nama Pegawai</th>
+                        <th>Bulan</th>
+                        <th>Total Gaji</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach($penggajian as $gaji)
+
+                    <tr>
+
+                        <td>{{ $loop->iteration }}</td>
+
+                        <td>{{ $gaji->pegawai->nama ?? '-' }}</td>
+
+                        <td>{{ $gaji->bulan }}</td>
+
+                        <td>
+                            Rp {{ number_format($gaji->total_gaji) }}
+                        </td>
+
+                    </tr>
+
+                    @endforeach
+
+                </tbody>
+
+            </table>
+
+        </div>
 
     </div>
 
 </div>
 
-</x-app-layout>
+@endsection

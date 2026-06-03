@@ -12,9 +12,9 @@
 
         <!-- NAMA PEGAWAI -->
         <div class="mb-3">
-    <label class="form-label">Nama Pegawai</label>
+    <label class="form-label">pegawai_id</label>
 
-    <select name="nama_pegawai" class="form-control">
+    <select name="pegawai_id" class="form-control">
 
         <option value="">-- Pilih Pegawai --</option>
 

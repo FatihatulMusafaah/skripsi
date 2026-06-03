@@ -9,96 +9,94 @@ use App\Models\Pegawai;
 class KasbonController extends Controller
 {
     /**
-     * TAMPIL DATA
+     * Tampilkan data kasbon
      */
     public function index()
     {
-        $kasbons = Kasbon::with('pegawai')
-                         ->latest()
-                         ->get();
+        $kasbon = Kasbon::with('pegawai')
+            ->latest()
+            ->get();
 
-        return view('kasbon.index', compact('kasbons'));
+        return view('kasbon.index', compact('kasbon'));
     }
 
     /**
-     * FORM TAMBAH
+     * Form tambah kasbon
      */
     public function create()
     {
-        $pegawais = Pegawai::all();
+        $pegawai = Pegawai::all();
 
-        return view('kasbon.create', compact('pegawais'));
+        return view('kasbon.create', compact('pegawai'));
     }
 
     /**
-     * SIMPAN DATA
+     * Simpan kasbon
      */
     public function store(Request $request)
     {
         $request->validate([
-
-            'pegawai_id'         => 'required',
+            'pegawai_id'         => 'required|exists:pegawai,id',
             'jumlah_kasbon'      => 'required|numeric',
             'metode_pembayaran'  => 'required',
-
         ]);
 
         Kasbon::create([
-
             'pegawai_id'         => $request->pegawai_id,
             'jumlah_kasbon'      => $request->jumlah_kasbon,
             'metode_pembayaran'  => $request->metode_pembayaran,
-
+            
+           
         ]);
 
         return redirect()->route('kasbon.index')
-                         ->with('success', 'Data kasbon berhasil ditambahkan');
+            ->with('success', 'Kasbon berhasil ditambahkan');
     }
 
     /**
-     * FORM EDIT
+     * Form edit kasbon
      */
     public function edit($id)
     {
         $kasbon = Kasbon::findOrFail($id);
 
-        $pegawais = Pegawai::all();
+        $pegawai = Pegawai::all();
 
         return view('kasbon.edit', compact(
             'kasbon',
-            'pegawais'
+            'pegawai'
         ));
     }
 
     /**
-     * UPDATE DATA
+     * Update kasbon
      */
     public function update(Request $request, $id)
     {
         $kasbon = Kasbon::findOrFail($id);
 
         $request->validate([
-
             'pegawai_id'         => 'required',
-            'jumlah_kasbon'      => 'required|numeric',
+            'jumlah_kasbon'      => 'required',
             'metode_pembayaran'  => 'required',
+             
 
         ]);
 
         $kasbon->update([
-
             'pegawai_id'         => $request->pegawai_id,
             'jumlah_kasbon'      => $request->jumlah_kasbon,
             'metode_pembayaran'  => $request->metode_pembayaran,
-
+            
+        
         ]);
 
         return redirect()->route('kasbon.index')
-                         ->with('success', 'Data kasbon berhasil diupdate');
+            ->with('success', 'Data kasbon berhasil diupdate');
     }
 
     /**
-     * HAPUS DATA
+     * Hapus kasbon
      */
     public function destroy($id)
     {
@@ -107,6 +105,6 @@ class KasbonController extends Controller
         $kasbon->delete();
 
         return redirect()->route('kasbon.index')
-                         ->with('success', 'Data kasbon berhasil dihapus');
+            ->with('success', 'Data kasbon berhasil dihapus');
     }
 }

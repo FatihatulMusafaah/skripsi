@@ -12,11 +12,11 @@ class PenggajianController extends Controller
     {
         $penggajian = Penggajian::with('pegawai')->latest()->get();
 
-        $pegawais = Pegawai::all();
+        $pegawai = Pegawai::all();
 
         return view('penggajian.index', compact(
             'penggajian',
-            'pegawais'
+            'pegawai'
         ));
     }
 

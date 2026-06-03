@@ -8,19 +8,17 @@ use App\Models\Pegawai;
 class PegawaiController extends Controller
 {
     /**
-     * TAMPIL DATA PEGAWAI
+     * Tampilkan data pegawai
      */
     public function index()
     {
-        // Ambil semua data pegawai
         $pegawai = Pegawai::latest()->get();
 
-        // Kirim ke view
         return view('pegawai.index', compact('pegawai'));
     }
 
     /**
-     * FORM TAMBAH PEGAWAI
+     * Form tambah pegawai
      */
     public function create()
     {
@@ -28,39 +26,34 @@ class PegawaiController extends Controller
     }
 
     /**
-     * SIMPAN DATA PEGAWAI
+     * Simpan pegawai
      */
     public function store(Request $request)
     {
         $request->validate([
-
-            'id'           => 'required',
-            'nama'           => 'required',
-            'email'          => 'required|email|unique:pegawai,email',
-            'jabatan'        => 'required',
-            'no_hp'          => 'required',
-            'alamat'         => 'nullable',
-           
+            'id_pegawai' => 'required',
+            'nama' => 'required',
+            'email' => 'required',
+            'jabatan' => 'required',
+            'no_hp' => 'required',
+            'alamat' => 'required',
         ]);
 
         Pegawai::create([
-
-            'id'           => $request->id,
-            'nama'           => $request->nama,
-            'email'          => $request->email,
-            'jabatan'        => $request->jabatan,
-            'no_hp'          => $request->no_hp,
-            'alamat'         => $request->alamat,
-            
-
+            'id_pegawai' => $request->id_pegawai,
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'jabatan' => $request->jabatan,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
         ]);
 
         return redirect()->route('pegawai.index')
-                         ->with('success', 'Data pegawai berhasil ditambahkan');
+            ->with('success', 'Data pegawai berhasil ditambahkan');
     }
 
     /**
-     * FORM EDIT PEGAWAI
+     * Form edit
      */
     public function edit($id)
     {
@@ -70,41 +63,27 @@ class PegawaiController extends Controller
     }
 
     /**
-     * UPDATE DATA PEGAWAI
+     * Update pegawai
      */
     public function update(Request $request, $id)
     {
         $pegawai = Pegawai::findOrFail($id);
 
-        $request->validate([
-
-            'id'           => 'required',
-            'nama'           => 'required',
-            'email'          => 'required|email|unique:pegawais,email,' . $id,
-            'jabatan'        => 'required',
-            'no_hp'          => 'required',
-            'alamat'         => 'nullable',
-            
-        ]);
-
         $pegawai->update([
-
-            'id'           => $request->id,
-            'nama'           => $request->nama,
-            'email'          => $request->email,
-            'jabatan'        => $request->jabatan,
-            'no_hp'          => $request->no_hp,
-            'alamat'         => $request->alamat,
-          
-
+            'id_pegawai' => $request->id_pegawai,
+            'nama' => $request->nama,
+            'email' => $request->email,
+            'jabatan' => $request->jabatan,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
         ]);
 
         return redirect()->route('pegawai.index')
-                         ->with('success', 'Data pegawai berhasil diupdate');
+            ->with('success', 'Data pegawai berhasil diupdate');
     }
 
     /**
-     * HAPUS DATA PEGAWAI
+     * Hapus pegawai
      */
     public function destroy($id)
     {
@@ -113,6 +92,6 @@ class PegawaiController extends Controller
         $pegawai->delete();
 
         return redirect()->route('pegawai.index')
-                         ->with('success', 'Data pegawai berhasil dihapus');
+            ->with('success', 'Data pegawai berhasil dihapus');
     }
 }

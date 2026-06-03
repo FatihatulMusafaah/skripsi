@@ -1,53 +1,48 @@
-<tbody>
+<h1>Data Absensi</h1>
 
-    @foreach($absensis as $absen)
+<a href="/absensi/create">Tambah Absensi</a>
 
-    <tr class="text-center">
+<table border="1" cellpadding="10">
 
-        <td class="p-3 border">
-            {{ $loop->iteration }}
+    <tr>
+        <th>pegawai_id</th>
+        <th>Nama Pegawai</th>
+        <th>Tanggal</th>
+        <th>Jam Masuk</th>
+        <th>Jam Pulang</th>
+        <th>Status</th>
+        <th>Aksi</th>
+    </tr>
+
+    @foreach($absensi as $absen)
+
+    <tr>
+
+        <td>{{ $loop->iteration }}</td>
+
+        <td>
+            {{ $absen->pegawai->nama ?? '-' }}
         </td>
 
-         <td class="p-3 border">
-            {{ $absen->pegawai->id }}
-        </td>
+        <td>{{ $absen->tanggal }}</td>
 
-        <td class="p-3 border">
-            {{ $absen->pegawai->nama }}
-        </td>
+        <td>{{ $absen->jam_masuk }}</td>
 
-        <td class="p-3 border">
-            {{ $absen->tanggal }}
-        </td>
+        <td>{{ $absen->jam_pulang ?? '-' }}</td>
 
-        <td class="p-3 border">
-            {{ $absen->jam_masuk }}
-        </td>
+        <td>{{ $absen->status }}</td>
 
-        <td class="p-3 border">
-            {{ $absen->jam_pulang ?? '-' }}
-        </td>
-
-        <td class="p-3 border">
-            {{ $absen->status }}
-        </td>
-
-        <td class="p-3 border">
+        <td>
 
             @if(!$absen->jam_pulang)
 
-                <a href="/absensi/pulang/{{ $absen->id }}"
-                   class="bg-green-500 text-white px-3 py-1 rounded">
-
+                <a href="{{ route('absensi.pulang', $absen->id) }}">
                     Absen Pulang
-
                 </a>
 
             @else
 
-                <span class="text-green-600 font-bold">
-                    Selesai
-                </span>
+                Selesai
 
             @endif
 
@@ -57,4 +52,4 @@
 
     @endforeach
 
-</tbody>
+</table>

@@ -32,7 +32,7 @@
 
         <tbody>
 
-            @forelse ($pegawais as $pegawai)
+            @forelse ($pegawai as $pegawai)
 
             <tr>
 

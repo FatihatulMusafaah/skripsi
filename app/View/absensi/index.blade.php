@@ -24,7 +24,7 @@
             <tbody>
                 @foreach($absensi as $a)
                 <tr class="text-center border">
-                    <td>{{ $a->nama_pegawai }}</td>
+                    <td>{{ $a->pegawai_id }}</td>
                     <td>{{ $a->tanggal }}</td>
                     <td>{{ $a->jam_masuk }}</td>
                     <td>{{ $a->jam_keluar ?? '-' }}</td>

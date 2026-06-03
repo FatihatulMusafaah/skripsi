@@ -1,12 +1,26 @@
-<x-app-layout>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistem Informasi Kepegawaian</title>
 
-    <div class="flex min-h-screen bg-gray-100">
+    <!-- Tailwind CSS -->
+    @vite('resources/css/app.css')
+
+    <!-- Chart JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="flex min-h-screen">
 
         <!-- SIDEBAR -->
         <aside class="w-64 bg-gray-800 text-white p-5">
 
             <h2 class="text-2xl font-bold mb-6">
-                Admin Panel
+                Admin 
             </h2>
 
             <ul class="space-y-2">
@@ -54,12 +68,23 @@
                 </li>
 
                 <li>
+                    <a href="/riwayatkasbon"
+                       class="block p-3 rounded hover:bg-gray-700">
+                        riwayatkasbon
+                    </a>
+                </li>
+
+                <li>
                     <a href="/laporan"
                        class="block p-3 rounded hover:bg-gray-700">
                         Laporan
                     </a>
                 </li>
 
+                <form action="{{ route('logout') }}" method="POST">
+    @csrf
+    <button type="submit">Logout</button>
+</form>
             </ul>
 
         </aside>
@@ -153,7 +178,7 @@
             <!-- GRAFIK -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                <!-- GRAFIK BAR -->
+                <!-- BAR CHART -->
                 <div class="bg-white p-6 rounded-xl shadow">
 
                     <h2 class="text-xl font-bold mb-4">
@@ -164,7 +189,7 @@
 
                 </div>
 
-                <!-- GRAFIK PIE -->
+                <!-- PIE CHART -->
                 <div class="bg-white p-6 rounded-xl shadow">
 
                     <h2 class="text-xl font-bold mb-4">
@@ -181,92 +206,71 @@
 
     </div>
 
-    <!-- CHART JS -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <!-- CHART -->
     <script>
 
         // BAR CHART
         const ctx = document.getElementById('pegawaiChart');
 
         new Chart(ctx, {
-
             type: 'bar',
-
             data: {
-
-                labels: [
-                    'Pegawai',
-                    'Absensi',
-                    'Cuti',
-                    'Kasbon'
-                ],
-
+                labels: ['Pegawai', 'Absensi', 'Cuti', 'Kasbon'],
                 datasets: [{
-
                     label: 'Data Sistem',
-
                     data: [
-                        {{ $totalPegawai ?? 0 }},
-                        {{ $absensiHariIni ?? 0 }},
-                        {{ $cutiHariIni ?? 0 }},
-                        {{ $totalKasbon ?? 0 }}
+                        {{ (int)($totalPegawai ?? 0) }},
+                        {{ (int)($absensiHariIni ?? 0) }},
+                        {{ (int)($cutiHariIni ?? 0) }},
+                        {{ (int)($totalKasbon ?? 0) }}
                     ],
-
                     backgroundColor: [
                         '#3B82F6',
                         '#10B981',
                         '#F59E0B',
                         '#EF4444'
                     ],
-
                     borderRadius: 10
-
                 }]
-
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
-
         });
-
 
         // PIE CHART
         const pie = document.getElementById('pieChart');
 
         new Chart(pie, {
-
             type: 'pie',
-
             data: {
-
-                labels: [
-                    'Pegawai',
-                    'Absensi',
-                    'Cuti',
-                    'Kasbon'
-                ],
-
+                labels: ['Pegawai', 'Absensi', 'Cuti', 'Kasbon'],
                 datasets: [{
-
                     data: [
-                        {{ $totalPegawai ?? 0 }},
-                        {{ $absensiHariIni ?? 0 }},
-                        {{ $cutiHariIni ?? 0 }},
-                        {{ $totalKasbon ?? 0 }}
+                        {{ (int)($totalPegawai ?? 0) }},
+                        {{ (int)($absensiHariIni ?? 0) }},
+                        {{ (int)($cutiHariIni ?? 0) }},
+                        {{ (int)($totalKasbon ?? 0) }}
                     ],
-
                     backgroundColor: [
                         '#3B82F6',
                         '#10B981',
                         '#F59E0B',
                         '#EF4444'
                     ]
-
                 }]
-
+            },
+            options: {
+                responsive: true
             }
-
         });
 
     </script>
 
-</x-app-layout>
+</body>
+</html>

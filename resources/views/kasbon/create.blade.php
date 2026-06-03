@@ -1,62 +1,173 @@
-<x-app-layout>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Kasbon</title>
 
-<div class="p-6">
+    @vite('resources/css/app.css')
+</head>
 
-<form action="{{ route('kasbon.store') }}" method="POST">
+<body class="bg-gray-100">
 
-    @csrf
+    <div class="max-w-3xl mx-auto mt-10 bg-white p-8 rounded-xl shadow">
 
-    <div class="mb-3">
-        <label>Nama Pegawai</label>
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">
+            Tambah Kasbon Pegawai
+        </h1>
 
-        <select name="pegawai_id" class="border w-full p-2">
-            @foreach($pegawais as $pegawai)
-                <option value="{{ $pegawai->id }}">
-                    {{ $pegawai->nama }}
-                </option>
-            @endforeach
-        </select>
+        {{-- ERROR VALIDASI --}}
+        @if ($errors->any())
+
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5">
+
+                <ul class="list-disc pl-5">
+
+                    @foreach ($errors->all() as $error)
+
+                        <li>{{ $error }}</li>
+
+                    @endforeach
+
+                </ul>
+
+            </div>
+
+        @endif
+
+        {{-- FORM --}}
+        <form action="{{ route('kasbon.store') }}" method="POST">
+
+            @csrf
+
+            {{-- PEGAWAI --}}
+            <div class="mb-5">
+
+                <label class="block mb-2 font-semibold">
+                    Nama Pegawai
+                </label>
+
+                <select name="pegawai_id"
+                        class="w-full border rounded-lg px-4 py-3">
+
+                    <option value="">
+                        -- Pilih Pegawai --
+                    </option>
+
+                    @foreach($pegawai as $pegawai)
+
+                        <option value="{{ $pegawai->id }}">
+
+                            {{ $pegawai->nama }}
+
+                        </option>
+
+                    @endforeach
+
+                </select>
+
+            </div>
+
+            {{-- JUMLAH KASBON --}}
+            <div class="mb-5">
+
+                <label class="block mb-2 font-semibold">
+                    Jumlah Kasbon
+                </label>
+
+                <input type="number"
+                       name="jumlah_kasbon"
+                       class="w-full border rounded-lg px-4 py-3"
+                       placeholder="Masukkan jumlah kasbon">
+
+            </div>
+
+            {{-- METODE PEMBAYARAN --}}
+            <div class="mb-5">
+
+                <label class="block mb-2 font-semibold">
+                    Metode Pembayaran
+                </label>
+
+                <select name="metode_pembayaran"
+                        id="metode"
+                        class="w-full border rounded-lg px-4 py-3">
+
+                    <option value="">
+                        -- Pilih Metode --
+                    </option>
+
+                    <option value="Sekali Bayar">
+                        Sekali Bayar
+                    </option>
+
+                    <option value="Cicilan">
+                        Cicilan
+                    </option>
+
+                </select>
+
+            </div>
+
+            {{-- JUMLAH CICILAN --}}
+            <div class="mb-5" id="cicilanBox" style="display: none;">
+
+                <label class="block mb-2 font-semibold">
+                    Jumlah Cicilan
+                </label>
+
+                <input type="number"
+                       name="jumlah_cicilan"
+                       class="w-full border rounded-lg px-4 py-3"
+                       placeholder="Masukkan jumlah cicilan">
+
+            </div>
+
+            {{-- BUTTON --}}
+            <div class="flex gap-3">
+
+                <button type="submit"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg">
+
+                    Simpan
+
+                </button>
+
+                <a href="{{ route('kasbon.index') }}"
+                   class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg">
+
+                    Kembali
+
+                </a>
+
+            </div>
+
+        </form>
+
     </div>
 
-    <div class="mb-3">
-        <label>Jumlah Kasbon</label>
+    {{-- SCRIPT --}}
+    <script>
 
-        <input type="number"
-               name="jumlah_kasbon"
-               class="border w-full p-2">
-    </div>
+        const metode = document.getElementById('metode');
 
-    <div class="mb-3">
-        <label>Metode Pembayaran</label>
+        const cicilanBox = document.getElementById('cicilanBox');
 
-        <select name="metode_pembayaran"
-                class="border w-full p-2">
+        metode.addEventListener('change', function () {
 
-            <option value="sekali_bayar">
-                Sekali Bayar
-            </option>
+            if (this.value === 'Cicilan') {
 
-            <option value="cicilan">
-                Cicilan
-            </option>
+                cicilanBox.style.display = 'block';
 
-        </select>
-    </div>
+            } else {
 
-    <div class="mb-3">
-        <label>Jumlah Cicilan</label>
+                cicilanBox.style.display = 'none';
 
-        <input type="number"
-               name="jumlah_cicilan"
-               class="border w-full p-2">
-    </div>
+            }
 
-    <button class="bg-green-500 text-white px-4 py-2 rounded">
-        Simpan
-    </button>
+        });
 
-</form>
+    </script>
 
-</div>
-
-</x-app-layout>
+</body>
+</html>
