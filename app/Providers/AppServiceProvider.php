@@ -14,6 +14,11 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Set Locale & Timezone
+        config(['app.locale' => 'id']);
+        \Carbon\Carbon::setLocale('id');
+        date_default_timezone_set('Asia/Jakarta');
+
         // Tambahkan baris ini untuk mendaftarkan komponen layout Anda secara paksa
         Blade::component('app-layout', \App\View\Components\AppLayout::class);
         

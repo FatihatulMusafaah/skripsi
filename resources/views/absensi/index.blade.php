@@ -33,7 +33,7 @@
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->iteration }}</td>
                         <td class="py-3 px-6 text-left font-medium">{{ $item->user->name ?? '-' }}</td>
-                        <td class="py-3 px-6 text-left">{{ $item->tanggal }}</td>
+                        <td class="py-3 px-6 text-left">{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}</td>
                         <td class="py-3 px-6 text-left">{{ $item->jam_masuk }}</td>
                         <td class="py-3 px-6 text-left">{{ $item->jam_keluar ?? '-' }}</td>
                         <td class="py-3 px-6 text-left">
@@ -47,13 +47,14 @@
                                     <a href="{{ route('absensi.pulang', $item->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs font-bold">
                                         Absen Pulang
                                     </a>
-                                @else
-                                    <span class="text-green-600 font-bold">Selesai</span>
                                 @endif
+                                <a href="{{ route('absensi.edit', $item->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold">
+                                    Edit
+                                </a>
                                 <form action="{{ route('absensi.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data absensi ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 font-bold ml-2">
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-bold">
                                         Hapus
                                     </button>
                                 </form>

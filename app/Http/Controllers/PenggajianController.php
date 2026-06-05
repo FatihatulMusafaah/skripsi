@@ -51,14 +51,15 @@ class PenggajianController extends Controller
             ->get();
 
         $total_jam_lembur = 0;
-        foreach ($dataAbsensi as $absen) {
-            $masuk = \Carbon\Carbon::parse($absen->jam_masuk);
-            $keluar = \Carbon\Carbon::parse($absen->jam_keluar);
-            $durasi = $masuk->diffInHours($keluar);
+        $jam_pulang_standar = \Carbon\Carbon::createFromTime(16, 0, 0);
 
-            // Jika kerja > 8 jam, sisanya dianggap lembur
-            if ($durasi > 8) {
-                $total_jam_lembur += ($durasi - 8);
+        foreach ($dataAbsensi as $absen) {
+            $keluar = \Carbon\Carbon::parse($absen->jam_keluar);
+
+            // Jika jam keluar lebih dari jam 16:00, hitung selisihnya sebagai lembur
+            if ($keluar->gt($jam_pulang_standar)) {
+                $selisihJam = $jam_pulang_standar->diffInHours($keluar);
+                $total_jam_lembur += $selisihJam;
             }
         }
         $total_lembur = $total_jam_lembur * $tarif_lembur;
@@ -173,7 +174,7 @@ class PenggajianController extends Controller
      */
     public function destroy(string $id)
     {
-        Penggajian::findOrFail($id)->delete();
+        Penggajian::destroy($id);
 
         return redirect()->route('penggajian.index')
             ->with('success', 'Data penggajian berhasil dihapus');

@@ -68,9 +68,20 @@ class AbsensiController extends Controller
     }
 
     /**
-     * Update absensi
+     * Form edit absensi
      */
-    public function update(Request $request, $id)
+    public function edit(string $id)
+    {
+        $absensi = Absensi::findOrFail($id);
+        $pegawai = User::where('role', 'karyawan')->get();
+
+        return view('absensi.edit', compact('absensi', 'pegawai'));
+    }
+
+    /**
+     * Update data absensi
+     */
+    public function update(Request $request, string $id)
     {
         $absensi = Absensi::findOrFail($id);
 
@@ -95,7 +106,7 @@ class AbsensiController extends Controller
     /**
      * Hapus absensi
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
         $absensi = Absensi::findOrFail($id);
         $absensi->delete();

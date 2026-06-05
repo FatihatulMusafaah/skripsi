@@ -46,14 +46,17 @@
                         <td class="py-3 px-6 text-left text-orange-500">- Rp {{ number_format($item->potongan_cuti, 0, ',', '.') }}</td>
                         <td class="py-3 px-6 text-left font-bold text-green-600">Rp {{ number_format($item->gaji_bersih, 0, ',', '.') }}</td>
                         <td class="py-3 px-6 text-center">
-                            <div class="flex item-center justify-center gap-2">
-                                <a href="{{ route('penggajian.edit', $item->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold">
+                            <div class="flex items-center justify-center space-x-3">
+                                <a href="{{ route('penggajian.edit', $item->id) }}" class="text-blue-600 hover:text-blue-900 font-bold transition">
                                     Edit
                                 </a>
-                                <form action="{{ route('penggajian.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data gaji ini?')">
+                                
+                                <form action="{{ route('penggajian.destroy', $item->id) }}" method="POST" class="inline-block">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-bold">
+                                    <button type="submit" 
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data gaji {{ $item->user->name }} periode {{ $item->bulan }} {{ $item->tahun }}?')" 
+                                        class="text-red-600 hover:text-red-900 font-bold transition">
                                         Hapus
                                     </button>
                                 </form>
