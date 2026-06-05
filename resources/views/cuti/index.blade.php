@@ -44,8 +44,8 @@
                         </td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex item-center justify-center gap-2">
-                                @if($item->status == 'Pending')
-                                    <form action="{{ route('cuti.update', $item->id) }}" method="POST">
+                                @if($item->status == 'pending')
+                                    <form action="{{ route('cuti.setujui', $item->id) }}" method="POST">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-xs font-bold">
@@ -53,10 +53,13 @@
                                         </button>
                                     </form>
                                 @endif
+                                <a href="{{ route('cuti.edit', $item->id) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-xs font-bold flex items-center">
+                                    Edit
+                                </a>
                                 <form action="{{ route('cuti.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data pengajuan cuti ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 font-bold ml-2">
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs font-bold">
                                         Hapus
                                     </button>
                                 </form>

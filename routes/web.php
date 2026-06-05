@@ -70,8 +70,10 @@ Route::middleware(['auth'])->group(function() {
     |--------------------------------------------------------------------------
     | CUTI
     |--------------------------------------------------------------------------
+    |
     */
     Route::resource('cuti', CutiController::class);
+    Route::put('/cuti/{id}/setujui', [CutiController::class, 'setujui'])->name('cuti.setujui');
 
     /*
     |--------------------------------------------------------------------------

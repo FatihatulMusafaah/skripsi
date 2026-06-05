@@ -34,17 +34,14 @@ class CutiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:user,id',
+            'nama' => 'required|exists:user,id',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date',
             'alasan' => 'required',
         ]);
 
-        $user = User::find($request->user_id);
-
         Cuti::create([
-            'pegawai_id' => $user->id,
-            'nama_pegawai' => $user->name,
+            'nama' => $request->nama,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'alasan' => $request->alasan,
@@ -55,7 +52,48 @@ class CutiController extends Controller
             ->with('success', 'Pengajuan cuti berhasil');
     }
 
-    public function update(Request $request, $id)
+    /**
+     * Form edit cuti
+     */
+    public function edit(string $id)
+    {
+        $cuti = Cuti::findOrFail($id);
+        $pegawai = User::where('role', 'karyawan')->get();
+
+        return view('cuti.edit', compact('cuti', 'pegawai'));
+    }
+
+    /**
+     * Update data cuti
+     */
+    public function update(Request $request, string $id)
+    {
+        $cuti = Cuti::findOrFail($id);
+
+        $request->validate([
+            'nama' => 'required|exists:user,id',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_selesai' => 'required|date',
+            'alasan' => 'required',
+            'status' => 'required|in:pending,disetujui,ditolak',
+        ]);
+
+        $cuti->update([
+            'nama' => $request->nama,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_selesai' => $request->tanggal_selesai,
+            'alasan' => $request->alasan,
+            'status' => $request->status,
+        ]);
+
+        return redirect()->route('cuti.index')
+            ->with('success', 'Data cuti berhasil diperbarui');
+    }
+
+    /**
+     * Setujui cuti (Quick action)
+     */
+    public function setujui(string $id)
     {
         $cuti = Cuti::findOrFail($id);
 
@@ -66,7 +104,7 @@ class CutiController extends Controller
         return back()->with('success', 'Cuti disetujui');
     }
 
-    public function destroy($id)
+    public function destroy(string $id)
     {
         Cuti::findOrFail($id)->delete();
 

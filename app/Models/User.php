@@ -41,7 +41,7 @@ class User extends Authenticatable
 
     public function cuti()
     {
-        return $this->hasMany(Cuti::class, 'pegawai_id');
+        return $this->hasMany(Cuti::class, 'nama');
     }
 
     public function kasbon()
