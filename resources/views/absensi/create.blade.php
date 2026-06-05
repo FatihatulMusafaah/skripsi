@@ -11,13 +11,20 @@
     .mdtp__wrapper {
         font-family: inherit;
     }
+
     .mdtp__button {
         color: #2563eb !important;
     }
-    .mdtp__digit.active, .mdtp__clock-dot, .mdtp__am.active, .mdtp__pm.active {
+
+    .mdtp__digit.active,
+    .mdtp__clock-dot,
+    .mdtp__am.active,
+    .mdtp__pm.active {
         background-color: #2563eb !important;
     }
-    .mdtp__hand, .mdtp__hand-dot {
+
+    .mdtp__hand,
+    .mdtp__hand-dot {
         fill: #2563eb !important;
         stroke: #2563eb !important;
     }
@@ -34,10 +41,10 @@
 
         <div class="mb-5">
             <label class="block text-gray-700 text-sm font-bold mb-2">Pilih Pegawai</label>
-            <select name="nama" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            <select name="pegawai_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 <option value="">-- Pilih Pegawai --</option>
                 @foreach ($pegawai as $p)
-                    <option value="{{ $p->id }}">{{ $p->name }}</option>
+                <option value="{{ $p->id }}">{{ $p->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -45,7 +52,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
             <div>
                 <label class="block text-gray-700 text-sm font-bold mb-2">Tanggal Absensi</label>
-                <input type="date" name="tanggal" value="{{ date('Y-m-d') }}" 
+                <input type="date" name="tanggal" value="{{ date('Y-m-d') }}"
                     class="shadow appearance-none border rounded-lg w-full py-2.5 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 border-gray-300" required>
             </div>
             <div>
@@ -66,7 +73,7 @@
                 </svg>
                 Waktu Kerja (Klik untuk Analog)
             </h3>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-gray-700 text-sm font-semibold mb-2 flex justify-between">
@@ -103,10 +110,10 @@
         </div>
 
         <script>
-            $(document).ready(function(){
+            $(document).ready(function() {
                 // Inisialisasi Analog Time Picker (24 jam)
-                $('.timepicker').mdtimepicker({ 
-                    format: 'hh:mm', 
+                $('.timepicker').mdtimepicker({
+                    format: 'hh:mm',
                     hourPadding: true,
                     is24hour: true,
                     theme: 'blue'
@@ -118,11 +125,11 @@
                 const hours = String(now.getHours()).padStart(2, '0');
                 const minutes = String(now.getMinutes()).padStart(2, '0');
                 const timeString = `${hours}:${minutes}`;
-                
+
                 // Set value ke input
                 const input = document.getElementById(id);
                 input.value = timeString;
-                
+
                 // Update MDTimePicker agar sinkron
                 $(input).mdtimepicker('setValue', timeString);
             }

@@ -35,13 +35,12 @@ class AbsensiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|exists:user,id',
+            'pegawai_id' => 'required|exists:user,id',
             'status' => 'required',
             'tanggal' => 'required|date',
         ]);
-
         Absensi::create([
-            'nama' => $request->nama,
+            'pegawai_id' => $request->pegawai_id,
             'tanggal' => $request->tanggal,
             'jam_masuk' => $request->jam_masuk ?? now()->format('H:i:s'),
             'jam_keluar' => $request->jam_keluar,

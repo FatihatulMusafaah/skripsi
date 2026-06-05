@@ -12,7 +12,7 @@ class Absensi extends Model
     protected $table = 'absensi';
 
     protected $fillable = [
-        'nama',
+        'pegawai_id',
         'tanggal',
         'jam_masuk',
         'jam_keluar',
@@ -24,6 +24,6 @@ class Absensi extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'nama');
+        return $this->belongsTo(User::class, 'pegawai_id');
     }
 }
