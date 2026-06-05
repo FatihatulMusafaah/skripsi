@@ -79,9 +79,9 @@ Route::middleware(['auth'])->group(function() {
     |--------------------------------------------------------------------------
     | PENGGAJIAN
     |--------------------------------------------------------------------------
+    |
     */
-    Route::get('/penggajian', [PenggajianController::class, 'index'])->name('penggajian.index');
-    Route::post('/penggajian/store', [PenggajianController::class, 'store'])->name('penggajian.store');
+    Route::resource('penggajian', PenggajianController::class);
 
     /*
     |--------------------------------------------------------------------------

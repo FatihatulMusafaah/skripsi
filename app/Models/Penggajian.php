@@ -12,12 +12,16 @@ class Penggajian extends Model
     protected $table = 'penggajian';
 
     protected $fillable = [
-        'user_id',
+        'pegawai_id',
+        'bulan',
+        'tahun',
         'gaji_pokok',
-        'lembur',
-        'potongan',
-        'total_gaji',
-        'tanggal',
+        'jam_lembur',
+        'tarif_lembur',
+        'total_lembur',
+        'potongan_kasbon',
+        'potongan_cuti',
+        'gaji_bersih',
     ];
 
     /**
@@ -25,6 +29,6 @@ class Penggajian extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'pegawai_id');
     }
 }
