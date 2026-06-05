@@ -12,7 +12,7 @@ class Cuti extends Model
     protected $table = 'cuti';
 
     protected $fillable = [
-        'nama',
+        'pegawai_id',
         'tanggal_mulai',
         'tanggal_selesai',
         'alasan',
@@ -24,6 +24,6 @@ class Cuti extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'nama');
+        return $this->belongsTo(User::class, 'pegawai_id');
     }
 }
