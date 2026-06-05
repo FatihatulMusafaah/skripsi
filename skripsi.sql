@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Jun 05, 2026 at 02:18 PM
+-- Host: localhost
+-- Generation Time: Jun 05, 2026 at 07:06 PM
 -- Server version: 8.0.30
--- PHP Version: 8.3.30
+-- PHP Version: 8.3.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `skripsi`
+-- Database: `tiha`
 --
 
 -- --------------------------------------------------------
@@ -29,15 +29,21 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `absensi` (
   `id` bigint UNSIGNED NOT NULL,
-  `pegawai_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_pegawai` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pegawai_id` bigint UNSIGNED NOT NULL,
   `tanggal` date NOT NULL,
   `jam_masuk` time DEFAULT NULL,
   `jam_keluar` time DEFAULT NULL,
-  `status` enum('hadir','izin','sakit','alpha') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'hadir',
+  `status` enum('hadir','izin','sakit','alpha') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'hadir',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `absensi`
+--
+
+INSERT INTO `absensi` (`id`, `pegawai_id`, `tanggal`, `jam_masuk`, `jam_keluar`, `status`, `created_at`, `updated_at`) VALUES
+(1, 2, '2026-06-06', '02:02:00', NULL, 'hadir', '2026-06-05 19:02:56', '2026-06-05 19:02:56');
 
 -- --------------------------------------------------------
 
@@ -47,12 +53,12 @@ CREATE TABLE `absensi` (
 
 CREATE TABLE `cuti` (
   `id` bigint UNSIGNED NOT NULL,
-  `pegawai_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_pegawai` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pegawai_id` bigint UNSIGNED NOT NULL,
+  `nama_pegawai` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tanggal_mulai` date NOT NULL,
   `tanggal_selesai` date NOT NULL,
-  `alasan` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` enum('pending','disetujui','ditolak') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `alasan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `status` enum('pending','disetujui','ditolak') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -65,11 +71,11 @@ CREATE TABLE `cuti` (
 
 CREATE TABLE `failed_jobs` (
   `id` bigint UNSIGNED NOT NULL,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -81,9 +87,9 @@ CREATE TABLE `failed_jobs` (
 
 CREATE TABLE `kasbon` (
   `id` bigint UNSIGNED NOT NULL,
-  `pegawai_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pegawai_id` bigint UNSIGNED NOT NULL,
   `jumlah_kasbon` decimal(12,2) NOT NULL,
-  `metode_pembayaran` enum('cicil_30','sekali_bayar') COLLATE utf8mb4_unicode_ci NOT NULL,
+  `metode_pembayaran` enum('cicil_30','sekali_bayar') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -96,7 +102,7 @@ CREATE TABLE `kasbon` (
 
 CREATE TABLE `migrations` (
   `id` int UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -125,8 +131,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `password_reset_tokens` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -138,8 +144,8 @@ CREATE TABLE `password_reset_tokens` (
 
 CREATE TABLE `penggajian` (
   `id` bigint UNSIGNED NOT NULL,
-  `pegawai_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_pegawai` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `pegawai_id` bigint UNSIGNED NOT NULL,
+  `nama_pegawai` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `gaji_pokok` int NOT NULL,
   `lembur` int NOT NULL DEFAULT '0',
   `potongan` int NOT NULL DEFAULT '0',
@@ -149,14 +155,6 @@ CREATE TABLE `penggajian` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `penggajian`
---
-
-INSERT INTO `penggajian` (`id`, `pegawai_id`, `nama_pegawai`, `gaji_pokok`, `lembur`, `potongan`, `total_gaji`, `tanggal`, `created_at`, `updated_at`) VALUES
-(3, '23', 'adi', 210000, 0, 20000, 200000, '2026-05-17', '2026-05-17 00:01:35', '2026-05-17 00:01:35'),
-(4, '324', 'd', 200000, 0, 39000, 171000, '2026-05-17', '2026-05-17 00:03:52', '2026-05-17 00:03:52');
-
 -- --------------------------------------------------------
 
 --
@@ -165,11 +163,11 @@ INSERT INTO `penggajian` (`id`, `pegawai_id`, `nama_pegawai`, `gaji_pokok`, `lem
 
 CREATE TABLE `personal_access_tokens` (
   `id` bigint UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tokenable_id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -200,18 +198,18 @@ CREATE TABLE `riwayat_kasbon` (
 
 CREATE TABLE `user` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('admin','owner','karyawan') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'karyawan',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('admin','owner','karyawan') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'karyawan',
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `jabatan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `no_hp` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `alamat` text COLLATE utf8mb4_unicode_ci,
-  `status` enum('aktif','nonaktif') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
+  `jabatan` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_hp` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `alamat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `status` enum('aktif','nonaktif') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'aktif',
   `gaji_pokok` bigint NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -287,7 +285,8 @@ ALTER TABLE `personal_access_tokens`
 -- Indexes for table `riwayat_kasbon`
 --
 ALTER TABLE `riwayat_kasbon`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `riwayat_kasbon_pegawai_id_foreign` (`pegawai_id`);
 
 --
 -- Indexes for table `user`
@@ -304,7 +303,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cuti`
@@ -362,25 +361,31 @@ ALTER TABLE `user`
 -- Constraints for table `absensi`
 --
 ALTER TABLE `absensi`
-  ADD CONSTRAINT `absensi_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawai` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `absensi_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `cuti`
 --
 ALTER TABLE `cuti`
-  ADD CONSTRAINT `cuti_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawai` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `cuti_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `kasbon`
 --
 ALTER TABLE `kasbon`
-  ADD CONSTRAINT `kasbon_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawai` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `kasbon_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `penggajian`
 --
 ALTER TABLE `penggajian`
-  ADD CONSTRAINT `penggajian_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `pegawai` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `penggajian_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `riwayat_kasbon`
+--
+ALTER TABLE `riwayat_kasbon`
+  ADD CONSTRAINT `riwayat_kasbon_pegawai_id_foreign` FOREIGN KEY (`pegawai_id`) REFERENCES `user` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
