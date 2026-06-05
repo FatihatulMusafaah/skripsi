@@ -34,17 +34,15 @@ class KasbonController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:user,id',
             'jumlah_kasbon' => 'required|numeric',
-            'metode_pembayaran' => 'required|in:Sekali Bayar,Cicilan',
+            'metode_pembayaran' => 'required|in:cicil_30,sekali_bayar',
         ]);
 
         Kasbon::create([
-            'user_id' => $request->user_id,
+            'pegawai_id' => $request->user_id,
             'jumlah_kasbon' => $request->jumlah_kasbon,
             'metode_pembayaran' => $request->metode_pembayaran,
-            'sisa_kasbon' => $request->jumlah_kasbon,
-            'status' => 'Belum Lunas'
         ]);
 
         return redirect()->route('kasbon.index')
@@ -70,13 +68,13 @@ class KasbonController extends Controller
         $kasbon = Kasbon::findOrFail($id);
 
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:user,id',
             'jumlah_kasbon' => 'required|numeric',
-            'metode_pembayaran' => 'required|in:Sekali Bayar,Cicilan',
+            'metode_pembayaran' => 'required|in:cicil_30,sekali_bayar',
         ]);
 
         $kasbon->update([
-            'user_id' => $request->user_id,
+            'pegawai_id' => $request->user_id,
             'jumlah_kasbon' => $request->jumlah_kasbon,
             'metode_pembayaran' => $request->metode_pembayaran,
         ]);

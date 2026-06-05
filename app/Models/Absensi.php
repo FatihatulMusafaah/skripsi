@@ -9,13 +9,13 @@ class Absensi extends Model
 {
     use HasFactory;
 
-    protected $table = 'absensis';
+    protected $table = 'absensi';
 
     protected $fillable = [
-        'user_id',
+        'nama',
         'tanggal',
         'jam_masuk',
-        'jam_pulang',
+        'jam_keluar',
         'status',
     ];
 
@@ -24,6 +24,6 @@ class Absensi extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'nama');
     }
 }

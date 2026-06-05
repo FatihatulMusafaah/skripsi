@@ -8,23 +8,19 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('absensis', function (Blueprint $table) {
+        Schema::create('absensi', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('user_id')
-                ->constrained('user')
-                ->onDelete('cascade');
-
+            $table->foreignId('nama')->constrained('user')->onDelete('cascade');
             $table->date('tanggal');
-            $table->time('jam_masuk');
-            $table->time('jam_pulang')->nullable();
-            $table->string('status');
+            $table->time('jam_masuk')->nullable();
+            $table->time('jam_keluar')->nullable();
+            $table->enum('status', ['hadir', 'izin', 'sakit', 'alpha'])->default('hadir');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('absensis');
+        Schema::dropIfExists('absensi');
     }
 };

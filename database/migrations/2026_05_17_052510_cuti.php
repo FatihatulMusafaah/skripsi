@@ -14,14 +14,13 @@ return new class extends Migration
         Schema::create('cuti', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')
-                ->constrained('user')
-                ->onDelete('cascade');
+            $table->foreignId('pegawai_id')->constrained('user')->onDelete('cascade');
+            $table->string('nama_pegawai');
 
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
             $table->text('alasan');
-            $table->string('status')->default('Menunggu');
+            $table->enum('status', ['pending', 'disetujui', 'ditolak'])->default('pending');
             $table->timestamps();
         });
     }

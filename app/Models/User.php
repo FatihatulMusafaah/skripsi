@@ -36,26 +36,26 @@ class User extends Authenticatable
     // Relationships
     public function absensi()
     {
-        return $this->hasMany(Absensi::class, 'user_id');
+        return $this->hasMany(Absensi::class, 'nama');
     }
 
     public function cuti()
     {
-        return $this->hasMany(Cuti::class, 'user_id');
+        return $this->hasMany(Cuti::class, 'pegawai_id');
     }
 
     public function kasbon()
     {
-        return $this->hasMany(Kasbon::class, 'user_id');
+        return $this->hasMany(Kasbon::class, 'pegawai_id');
     }
 
     public function penggajian()
     {
-        return $this->hasMany(Penggajian::class, 'user_id');
+        return $this->hasMany(Penggajian::class, 'pegawai_id');
     }
 
     public function riwayatKasbon()
     {
-        return $this->hasMany(RiwayatKasbon::class, 'user_id');
+        return $this->hasMany(RiwayatKasbon::class, 'pegawai_id');
     }
 }

@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('riwayat_kasbon', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')
+            $table->foreignId('pegawai_id')
                 ->constrained('user')
                 ->onDelete('cascade');
 

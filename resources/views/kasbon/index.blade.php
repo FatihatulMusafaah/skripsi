@@ -23,8 +23,6 @@
                     <th class="py-3 px-6 text-left">Nama Pegawai</th>
                     <th class="py-3 px-6 text-left">Jumlah</th>
                     <th class="py-3 px-6 text-left">Metode</th>
-                    <th class="py-3 px-6 text-left">Sisa</th>
-                    <th class="py-3 px-6 text-left">Status</th>
                     <th class="py-3 px-6 text-center">Aksi</th>
                 </tr>
             </thead>
@@ -34,14 +32,7 @@
                         <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->iteration }}</td>
                         <td class="py-3 px-6 text-left font-medium">{{ $item->user->name ?? '-' }}</td>
                         <td class="py-3 px-6 text-left">Rp {{ number_format($item->jumlah_kasbon, 0, ',', '.') }}</td>
-                        <td class="py-3 px-6 text-left">{{ $item->metode_pembayaran }}</td>
-                        <td class="py-3 px-6 text-left">Rp {{ number_format($item->sisa_kasbon, 0, ',', '.') }}</td>
-                        <td class="py-3 px-6 text-left">
-                            <span class="px-2 py-1 rounded text-xs font-bold 
-                                {{ $item->status == 'Lunas' ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700' }}">
-                                {{ $item->status }}
-                            </span>
-                        </td>
+                        <td class="py-3 px-6 text-left">{{ $item->metode_pembayaran == 'cicil_30' ? 'Cicilan (30 Hari)' : 'Sekali Bayar' }}</td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex item-center justify-center gap-2">
                                 <a href="{{ route('kasbon.edit', $item->id) }}" class="text-blue-600 hover:text-blue-900 font-bold">

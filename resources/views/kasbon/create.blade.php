@@ -28,8 +28,8 @@
         <div class="mb-6">
             <label class="block text-gray-700 text-sm font-bold mb-2">Metode Pembayaran</label>
             <select name="metode_pembayaran" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                <option value="Sekali Bayar">Sekali Bayar</option>
-                <option value="Cicilan">Cicilan</option>
+                <option value="sekali_bayar">Sekali Bayar</option>
+                <option value="cicil_30">Cicilan</option>
             </select>
         </div>
 

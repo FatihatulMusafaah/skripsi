@@ -34,18 +34,21 @@ class CutiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:user,id',
             'tanggal_mulai' => 'required|date',
             'tanggal_selesai' => 'required|date',
             'alasan' => 'required',
         ]);
 
+        $user = User::find($request->user_id);
+
         Cuti::create([
-            'user_id' => $request->user_id,
+            'pegawai_id' => $user->id,
+            'nama_pegawai' => $user->name,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'alasan' => $request->alasan,
-            'status' => 'Pending'
+            'status' => 'pending'
         ]);
 
         return redirect()->route('cuti.index')

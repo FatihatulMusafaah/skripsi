@@ -23,7 +23,7 @@
                     <th class="py-3 px-6 text-left">Nama Pegawai</th>
                     <th class="py-3 px-6 text-left">Tanggal</th>
                     <th class="py-3 px-6 text-left">Jam Masuk</th>
-                    <th class="py-3 px-6 text-left">Jam Pulang</th>
+                    <th class="py-3 px-6 text-left">Jam Keluar</th>
                     <th class="py-3 px-6 text-left">Status</th>
                     <th class="py-3 px-6 text-center">Aksi</th>
                 </tr>
@@ -35,15 +35,15 @@
                         <td class="py-3 px-6 text-left font-medium">{{ $item->user->name ?? '-' }}</td>
                         <td class="py-3 px-6 text-left">{{ $item->tanggal }}</td>
                         <td class="py-3 px-6 text-left">{{ $item->jam_masuk }}</td>
-                        <td class="py-3 px-6 text-left">{{ $item->jam_pulang ?? '-' }}</td>
+                        <td class="py-3 px-6 text-left">{{ $item->jam_keluar ?? '-' }}</td>
                         <td class="py-3 px-6 text-left">
                             <span class="px-2 py-1 rounded text-xs font-bold bg-blue-100 text-blue-700">
-                                {{ $item->status }}
+                                {{ ucfirst($item->status) }}
                             </span>
                         </td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex item-center justify-center gap-2">
-                                @if(!$item->jam_pulang)
+                                @if(!$item->jam_keluar)
                                     <a href="{{ route('absensi.pulang', $item->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-xs font-bold">
                                         Absen Pulang
                                     </a>

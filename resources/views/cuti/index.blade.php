@@ -32,14 +32,14 @@
                 @forelse ($cuti as $item)
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->iteration }}</td>
-                        <td class="py-3 px-6 text-left font-medium">{{ $item->user->name ?? '-' }}</td>
+                        <td class="py-3 px-6 text-left font-medium">{{ $item->nama_pegawai ?? ($item->user->name ?? '-') }}</td>
                         <td class="py-3 px-6 text-left">{{ $item->tanggal_mulai }}</td>
                         <td class="py-3 px-6 text-left">{{ $item->tanggal_selesai }}</td>
                         <td class="py-3 px-6 text-left">{{ $item->alasan }}</td>
                         <td class="py-3 px-6 text-left">
                             <span class="px-2 py-1 rounded text-xs font-bold 
-                                {{ $item->status == 'disetujui' ? 'bg-green-200 text-green-700' : ($item->status == 'Pending' ? 'bg-yellow-200 text-yellow-700' : 'bg-red-200 text-red-700') }}">
-                                {{ $item->status }}
+                                {{ $item->status == 'disetujui' ? 'bg-green-200 text-green-700' : (strtolower($item->status) == 'pending' ? 'bg-yellow-200 text-yellow-700' : 'bg-red-200 text-red-700') }}">
+                                {{ ucfirst($item->status) }}
                             </span>
                         </td>
                         <td class="py-3 px-6 text-center">

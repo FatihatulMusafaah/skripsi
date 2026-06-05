@@ -11,15 +11,10 @@ return new class extends Migration
         Schema::create('kasbon', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')
-                ->constrained('user')
-                ->onDelete('cascade');
+            $table->foreignId('pegawai_id')->constrained('user')->onDelete('cascade');
 
-            $table->bigInteger('jumlah_kasbon');
-            $table->enum('metode_pembayaran', ['Sekali Bayar', 'Cicilan']);
-            $table->bigInteger('jumlah_cicilan')->default(0);
-            $table->bigInteger('sisa_kasbon');
-            $table->string('status')->default('Belum Lunas');
+            $table->decimal('jumlah_kasbon', 12, 2);
+            $table->enum('metode_pembayaran', ['cicil_30', 'sekali_bayar']);
             $table->timestamps();
         });
     }

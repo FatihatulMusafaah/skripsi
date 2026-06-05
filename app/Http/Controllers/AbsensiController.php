@@ -24,9 +24,9 @@ class AbsensiController extends Controller
      */
     public function create()
     {
-        $pegawais = User::where('role', 'karyawan')->get();
+        $pegawai = User::where('role', 'karyawan')->get();
 
-        return view('absensi.create', compact('pegawais'));
+        return view('absensi.create', compact('pegawai'));
     }
 
     /**
@@ -35,15 +35,17 @@ class AbsensiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'nama' => 'required|exists:user,id',
             'status' => 'required',
+            'tanggal' => 'required|date',
         ]);
 
         Absensi::create([
-            'user_id' => $request->user_id,
-            'tanggal' => now()->toDateString(),
-            'jam_masuk' => now()->format('H:i:s'),
-            'status' => $request->status,
+            'nama' => $request->nama,
+            'tanggal' => $request->tanggal,
+            'jam_masuk' => $request->jam_masuk ?? now()->format('H:i:s'),
+            'jam_keluar' => $request->jam_keluar,
+            'status' => strtolower($request->status),
         ]);
 
         return redirect()->route('absensi.index')
@@ -58,7 +60,7 @@ class AbsensiController extends Controller
         $absensi = Absensi::findOrFail($id);
 
         $absensi->update([
-            'jam_pulang' => now()->format('H:i:s')
+            'jam_keluar' => now()->format('H:i:s')
         ]);
 
         return redirect()->route('absensi.index')
@@ -73,17 +75,17 @@ class AbsensiController extends Controller
         $absensi = Absensi::findOrFail($id);
 
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'nama' => 'required|exists:user,id',
             'tanggal' => 'required|date',
             'status' => 'required',
         ]);
 
         $absensi->update([
-            'user_id' => $request->user_id,
+            'nama' => $request->nama,
             'tanggal' => $request->tanggal,
             'jam_masuk' => $request->jam_masuk,
-            'jam_pulang' => $request->jam_pulang,
-            'status' => $request->status,
+            'jam_keluar' => $request->jam_keluar,
+            'status' => strtolower($request->status),
         ]);
 
         return redirect()->route('absensi.index')
