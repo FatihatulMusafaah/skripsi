@@ -35,6 +35,8 @@ class RiwayatKasbonController extends Controller
             'pegawai_id' => 'required|exists:user,id',
             'total_kasbon' => 'required|numeric|min:0',
             'kasbon_dibayar' => 'required|numeric|min:0',
+            'lama_cicilan' => 'required|integer|min:0',
+            'sisa_cicilan' => 'required|integer|min:0',
         ]);
 
         $total_kasbon = $request->total_kasbon;
@@ -46,6 +48,8 @@ class RiwayatKasbonController extends Controller
             'total_kasbon' => $total_kasbon,
             'kasbon_dibayar' => $kasbon_dibayar,
             'sisa_kasbon' => $sisa_kasbon,
+            'lama_cicilan' => $request->lama_cicilan,
+            'sisa_cicilan' => $request->sisa_cicilan,
         ]);
 
         return redirect()->route('riwayat-kasbon.index')->with('success', 'Riwayat kasbon berhasil ditambahkan.');
@@ -70,6 +74,8 @@ class RiwayatKasbonController extends Controller
             'pegawai_id' => 'required|exists:user,id',
             'total_kasbon' => 'required|numeric|min:0',
             'kasbon_dibayar' => 'required|numeric|min:0',
+            'lama_cicilan' => 'required|integer|min:0',
+            'sisa_cicilan' => 'required|integer|min:0',
         ]);
 
         $riwayatKasbon = RiwayatKasbon::findOrFail($id);
@@ -83,6 +89,8 @@ class RiwayatKasbonController extends Controller
             'total_kasbon' => $total_kasbon,
             'kasbon_dibayar' => $kasbon_dibayar,
             'sisa_kasbon' => $sisa_kasbon,
+            'lama_cicilan' => $request->lama_cicilan,
+            'sisa_cicilan' => $request->sisa_cicilan,
         ]);
 
         return redirect()->route('riwayat-kasbon.index')->with('success', 'Riwayat kasbon berhasil diperbarui.');

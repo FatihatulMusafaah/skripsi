@@ -43,17 +43,46 @@
                         <td class="py-3 px-6 text-left">{{ $item->lama_cicilan }} Bln</td>
                         <td class="py-3 px-6 text-left font-bold">Rp {{ number_format($item->sisa_kasbon, 0, ',', '.') }}</td>
                         <td class="py-3 px-6 text-left">
-                            <span class="px-2 py-1 rounded text-xs font-bold {{ $item->status == 'aktif' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}">
+                            @php
+                                $statusClass = [
+                                    'pending' => 'bg-yellow-100 text-yellow-700',
+                                    'aktif' => 'bg-green-100 text-green-700',
+                                    'ditolak' => 'bg-red-100 text-red-700',
+                                    'lunas' => 'bg-gray-100 text-gray-700',
+                                ][$item->status] ?? 'bg-gray-100 text-gray-700';
+                            @endphp
+                            <span class="px-2 py-1 rounded text-xs font-bold {{ $statusClass }}">
                                 {{ strtoupper($item->status) }}
                             </span>
                         </td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex item-center justify-center gap-2">
+                                @if($item->status == 'pending')
+                                    <form action="{{ route('kasbon.setujui', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="text-green-600 hover:text-green-800 font-bold text-xs" title="Setujui">
+                                            SETUJUI
+                                        </button>
+                                    </form>
+                                    <form action="{{ route('kasbon.tolak', $item->id) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="text-red-600 hover:text-red-800 font-bold text-xs" title="Tolak">
+                                            TOLAK
+                                        </button>
+                                    </form>
+                                @endif
+                                
+                                <a href="{{ route('kasbon.edit', $item->id) }}" class="text-blue-600 hover:text-blue-800 font-bold text-xs">
+                                    EDIT
+                                </a>
+
                                 <form action="{{ route('kasbon.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data kasbon ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-500 hover:text-red-700 transition">
-                                        <i class="fas fa-trash"></i> Hapus
+                                    <button type="submit" class="text-red-500 hover:text-red-700 font-bold text-xs">
+                                        HAPUS
                                     </button>
                                 </form>
                             </div>

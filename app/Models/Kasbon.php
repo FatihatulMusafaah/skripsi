@@ -40,13 +40,20 @@ class Kasbon extends Model
                 $model->status = 'lunas';
                 $model->sisa_kasbon = 0;
             } else {
-                $model->status = 'aktif';
+                // Jika sisa > 0 dan status lunas, kembalikan ke aktif
+                if ($model->status == 'lunas') {
+                    $model->status = 'aktif';
+                }
+                // Status pending dan ditolak tetap dibiarkan apa adanya
             }
         });
 
         // Setelah simpan (create/update), sinkronkan ke RiwayatKasbon
         static::saved(function ($model) {
-            static::updateRiwayat($model->pegawai_id);
+            // Hanya sinkronkan jika statusnya aktif atau lunas
+            if (in_array($model->status, ['aktif', 'lunas'])) {
+                static::updateRiwayat($model->pegawai_id);
+            }
         });
 
         // Setelah hapus, sinkronkan ke RiwayatKasbon
@@ -60,7 +67,10 @@ class Kasbon extends Model
      */
     public static function updateRiwayat($pegawai_id)
     {
-        $allKasbon = self::where('pegawai_id', $pegawai_id)->get();
+        // Hanya ambil kasbon yang sudah disetujui (aktif) atau sudah lunas
+        $allKasbon = self::where('pegawai_id', $pegawai_id)
+            ->whereIn('status', ['aktif', 'lunas'])
+            ->get();
         
         if ($allKasbon->isEmpty()) {
             RiwayatKasbon::where('pegawai_id', $pegawai_id)->delete();

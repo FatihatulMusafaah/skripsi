@@ -21,46 +21,66 @@
             </h2>
 
             <nav class="space-y-2">
+                @if(Auth::user()->role == 'admin')
+                    <a href="{{ route('admin.dashboard') }}"
+                    class="block p-3 rounded {{ request()->is('admin/dashboard') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Dashboard
+                    </a>
 
-                <a href="{{ route('dashboard') }}"
-                   class="block p-3 rounded {{ request()->is('dashboard') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
-                    Dashboard
-                </a>
+                    <a href="{{ route('pegawai.index') }}"
+                    class="block p-3 rounded {{ request()->is('admin/pegawai*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Data Pegawai
+                    </a>
 
-                <a href="{{ route('pegawai.index') }}"
-                   class="block p-3 rounded {{ request()->is('pegawai*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
-                    Data Pegawai
-                </a>
+                    <a href="{{ route('absensi.index') }}"
+                    class="block p-3 rounded {{ request()->is('admin/absensi*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Absensi
+                    </a>
 
-                <a href="{{ route('absensi.index') }}"
-                   class="block p-3 rounded {{ request()->is('absensi*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
-                    Absensi
-                </a>
+                    <a href="{{ route('cuti.index') }}"
+                    class="block p-3 rounded {{ request()->is('admin/cuti*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Pengajuan Cuti
+                    </a>
 
-                <a href="{{ route('cuti.index') }}"
-                   class="block p-3 rounded {{ request()->is('cuti*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
-                    Pengajuan Cuti
-                </a>
+                    <a href="{{ route('penggajian.index') }}"
+                    class="block p-3 rounded {{ request()->is('admin/penggajian*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Penggajian
+                    </a>
 
-                <a href="{{ route('penggajian.index') }}"
-                   class="block p-3 rounded {{ request()->is('penggajian*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
-                    Penggajian
-                </a>
+                    <a href="{{ route('kasbon.index') }}"
+                    class="block p-3 rounded {{ request()->is('admin/kasbon*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Kasbon
+                    </a>
 
-                <a href="{{ route('kasbon.index') }}"
-                   class="block p-3 rounded {{ request()->is('kasbon*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
-                    Kasbon
-                </a>
+                    <a href="{{ route('riwayat-kasbon.index') }}"
+                    class="block p-3 rounded {{ request()->is('admin/riwayat-kasbon*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Riwayat Kasbon
+                    </a>
 
-                <a href="{{ route('riwayat-kasbon.index') }}"
-                   class="block p-3 rounded {{ request()->is('riwayatkasbon*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
-                    Riwayat Kasbon
-                </a>
-
-                <a href="{{ route('laporan.index') }}"
-                   class="block p-3 rounded {{ request()->is('laporan*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
-                    Laporan
-                </a>
+                    <a href="{{ route('laporan.index') }}"
+                    class="block p-3 rounded {{ request()->is('admin/laporan*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Laporan
+                    </a>
+                @elseif(Auth::user()->role == 'owner')
+                    <a href="{{ route('owner.dashboard') }}"
+                    class="block p-3 rounded {{ request()->is('owner/dashboard') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('owner.laporan') }}"
+                    class="block p-3 rounded {{ request()->is('owner/laporan*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Laporan
+                    </a>
+                @elseif(Auth::user()->role == 'karyawan')
+                    <a href="{{ route('karyawan.dashboard') }}"
+                    class="block p-3 rounded {{ request()->is('pegawai/dashboard') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('karyawan.absensi') }}" class="block p-3 rounded {{ request()->is('pegawai/absensi*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">Absensi Saya</a>
+                    <a href="{{ route('karyawan.cuti') }}" class="block p-3 rounded {{ request()->is('pegawai/cuti*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">Ajukan Cuti</a>
+                    <a href="{{ route('karyawan.kasbon') }}" class="block p-3 rounded {{ request()->is('pegawai/kasbon*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">Kasbon</a>
+                    <a href="{{ route('karyawan.slip_gaji') }}" class="block p-3 rounded {{ request()->is('pegawai/slip-gaji*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">Slip Gaji</a>
+                    <a href="{{ route('karyawan.laporan') }}" class="block p-3 rounded {{ request()->is('pegawai/laporan*') ? 'bg-blue-600' : 'hover:bg-gray-700' }}">Laporan</a>
+                @endif
 
                 <div class="pt-10">
                     <form action="{{ route('logout') }}" method="POST">

@@ -27,9 +27,20 @@
             <input type="number" name="total_kasbon" value="{{ $riwayatKasbon->total_kasbon }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
         </div>
 
-        <div class="mb-6">
+        <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">Kasbon Dibayar</label>
             <input type="number" name="kasbon_dibayar" value="{{ $riwayatKasbon->kasbon_dibayar }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-6">
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2">Tenor (Bulan)</label>
+                <input type="number" name="lama_cicilan" value="{{ $riwayatKasbon->lama_cicilan }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+            <div>
+                <label class="block text-gray-700 text-sm font-bold mb-2">Sisa Tenor (Bulan)</label>
+                <input type="number" name="sisa_cicilan" value="{{ $riwayatKasbon->sisa_cicilan }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
         </div>
 
         <div class="flex items-center justify-end">

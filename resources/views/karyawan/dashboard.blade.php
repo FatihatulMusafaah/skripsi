@@ -1,148 +1,44 @@
+@extends('layouts.app')
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Karyawan</title>
+@section('content')
+<div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Dashboard Karyawan</h1>
+    <p class="text-gray-500">Selamat Datang, {{ Auth::user()->name }}</p>
+</div>
 
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family:Arial, Helvetica, sans-serif;
-        }
-
-        body{
-            background:#f1f5f9;
-        }
-
-        .header{
-            background:#2563eb;
-            color:white;
-            padding:20px;
-            border-bottom-left-radius:20px;
-            border-bottom-right-radius:20px;
-            box-shadow:0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .header h2{
-            font-size:24px;
-        }
-
-        .header p{
-            margin-top:5px;
-            font-size:14px;
-        }
-
-        .container{
-            padding:20px;
-        }
-
-        .card{
-            background:white;
-            padding:18px;
-            border-radius:15px;
-            margin-bottom:15px;
-            box-shadow:0 2px 10px rgba(0,0,0,0.08);
-            transition:0.3s;
-        }
-
-        .card:hover{
-            transform:scale(1.02);
-        }
-
-        .card a{
-            text-decoration:none;
-            color:#111827;
-            font-size:18px;
-            font-weight:bold;
-            display:block;
-        }
-
-        .icon{
-            font-size:35px;
-            margin-bottom:10px;
-        }
-
-        .logout{
-            width:100%;
-            padding:14px;
-            border:none;
-            border-radius:12px;
-            background:#dc2626;
-            color:white;
-            font-size:16px;
-            font-weight:bold;
-            cursor:pointer;
-        }
-
-        .logout:hover{
-            background:#b91c1c;
-        }
-
-        .footer{
-            text-align:center;
-            margin-top:30px;
-            color:gray;
-            font-size:13px;
-        }
-
-        @media(max-width:600px){
-            .header h2{
-                font-size:20px;
-            }
-
-            .card a{
-                font-size:16px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <div class="header">
-        <h2>Dashboard Karyawan</h2>
-        <p>Selamat datang di Sistem Informasi Kepegawaian</p>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow border-l-4 border-green-500">
+        <h3 class="text-gray-500 text-sm font-semibold">Status Kehadiran</h3>
+        <p class="text-lg font-bold text-gray-800 mt-2">
+            @if($absensiHariIni)
+                Sudah Absen ({{ $absensiHariIni->jam_masuk }})
+            @else
+                Belum Absen
+            @endif
+        </p>
     </div>
-
-    <div class="container">
-
-        <div class="card">
-            <div class="icon">🕒</div>
-            <a href="/absensi">Menu Absensi</a>
-        </div>
-
-        <div class="card">
-            <div class="icon">📅</div>
-            <a href="/cuti-karyawan">Pengajuan Cuti</a>
-        </div>
-
-        <div class="card">
-            <div class="icon">💰</div>
-            <a href="/kasbon">Menu Kasbon</a>
-        </div>
-
-        <div class="card">
-            <div class="icon">📄</div>
-            <a href="/penggajian">Data Penggajian</a>
-        </div>
-
-        <br>
-
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="logout">
-                Logout
-            </button>
-        </form>
-
-        <div class="footer">
-            Sistem Informasi Kepegawaian
-        </div>
-
+    <div class="bg-white p-6 rounded-xl shadow border-l-4 border-yellow-500">
+        <h3 class="text-gray-500 text-sm font-semibold">Total Cuti Disetujui</h3>
+        <p class="text-lg font-bold text-gray-800 mt-2">{{ $totalCuti }} Hari</p>
     </div>
+    <div class="bg-white p-6 rounded-xl shadow border-l-4 border-red-500">
+        <h3 class="text-gray-500 text-sm font-semibold">Sisa Kasbon</h3>
+        <p class="text-lg font-bold text-red-600 mt-2">Rp {{ number_format($kasbonAktif, 0, ',', '.') }}</p>
+    </div>
+</div>
 
-</body>
-</html>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Akses Cepat</h2>
+        <div class="flex flex-wrap gap-4">
+            <a href="{{ route('karyawan.absensi') }}" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Absen Sekarang</a>
+            <a href="{{ route('karyawan.cuti') }}" class="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition">Ajukan Cuti</a>
+            <a href="{{ route('karyawan.kasbon') }}" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">Ajukan Kasbon</a>
+        </div>
+    </div>
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="text-xl font-bold mb-4">Pengumuman</h2>
+        <p class="text-gray-600 italic">Tidak ada pengumuman terbaru.</p>
+    </div>
+</div>
+@endsection

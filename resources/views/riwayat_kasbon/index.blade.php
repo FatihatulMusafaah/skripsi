@@ -4,7 +4,6 @@
 <div class="bg-white p-8 rounded-lg shadow-md">
     <div class="flex justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Riwayat Kasbon</h2>
-        {{-- Tombol tambah dimatikan karena sudah otomatis dari menu Kasbon --}}
         <span class="text-sm text-gray-500 italic">* Data otomatis terupdate dari menu Kasbon</span>
     </div>
 
@@ -46,6 +45,9 @@
                         </td>
                         <td class="py-3 px-4 text-center">
                             <div class="flex item-center justify-center gap-2">
+                                <a href="{{ route('riwayat-kasbon.edit', $item->id) }}" class="text-blue-600 hover:text-blue-900 font-bold">
+                                    Edit
+                                </a>
                                 <form action="{{ route('riwayat-kasbon.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data riwayat ini?')">
                                     @csrf
                                     @method('DELETE')

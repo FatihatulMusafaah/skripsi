@@ -32,11 +32,11 @@ class SesiController extends Controller
         // 3. Proses otentikasi ke database
         if (Auth::attempt($infologin)) {
            if (Auth::user()->role == 'admin'){
-            return redirect()->route('dashboard');
+            return redirect('/admin/dashboard');
            }elseif (Auth::user()->role == 'karyawan'){
-            return redirect()->route('dashboard');
+            return redirect('/pegawai/dashboard');
            }elseif (Auth::user()->role == 'owner'){
-            return redirect()->route('dashboard');
+            return redirect('/owner/dashboard');
            }
         } else {
             // Jika email atau password salah, kembali ke login dengan pesan error
