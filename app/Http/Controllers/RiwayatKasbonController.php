@@ -3,71 +3,99 @@
 namespace App\Http\Controllers;
 
 use App\Models\RiwayatKasbon;
-use App\Models\Kasbon;
 use App\Models\User;
 use Illuminate\Http\Request;
 
 class RiwayatKasbonController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        $riwayat = RiwayatKasbon::with('user')->latest()->get();
-        return view('riwayat_kasbon.index', compact('riwayat'));
+        $riwayatKasbon = RiwayatKasbon::with('pegawai')->latest()->get();
+        return view('riwayat_kasbon.index', compact('riwayatKasbon'));
     }
 
+    /**
+     * Show the form for creating a new resource.
+     */
     public function create()
     {
         $pegawai = User::where('role', 'karyawan')->get();
         return view('riwayat_kasbon.create', compact('pegawai'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'total_kasbon' => 'required|numeric',
-            'kasbon_dibayar' => 'required|numeric',
+            'pegawai_id' => 'required|exists:user,id',
+            'total_kasbon' => 'required|numeric|min:0',
+            'kasbon_dibayar' => 'required|numeric|min:0',
         ]);
+
+        $total_kasbon = $request->total_kasbon;
+        $kasbon_dibayar = $request->kasbon_dibayar;
+        $sisa_kasbon = $total_kasbon - $kasbon_dibayar;
 
         RiwayatKasbon::create([
-            'user_id' => $request->user_id,
-            'total_kasbon' => $request->total_kasbon,
-            'kasbon_dibayar' => $request->kasbon_dibayar,
-            'sisa_kasbon' => $request->total_kasbon - $request->kasbon_dibayar,
+            'pegawai_id' => $request->pegawai_id,
+            'total_kasbon' => $total_kasbon,
+            'kasbon_dibayar' => $kasbon_dibayar,
+            'sisa_kasbon' => $sisa_kasbon,
         ]);
 
-        return redirect()->route('riwayat-kasbon.index')
-            ->with('success', 'Data riwayat kasbon berhasil ditambahkan');
+        return redirect()->route('riwayat-kasbon.index')->with('success', 'Riwayat kasbon berhasil ditambahkan.');
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     */
     public function edit($id)
     {
-        $riwayat = RiwayatKasbon::findOrFail($id);
+        $riwayatKasbon = RiwayatKasbon::findOrFail($id);
         $pegawai = User::where('role', 'karyawan')->get();
-
-        return view('riwayat_kasbon.edit', compact('riwayat', 'pegawai'));
+        return view('riwayat_kasbon.edit', compact('riwayatKasbon', 'pegawai'));
     }
 
+    /**
+     * Update the specified resource in storage.
+     */
     public function update(Request $request, $id)
     {
-        $riwayat = RiwayatKasbon::findOrFail($id);
-
-        $riwayat->update([
-            'user_id' => $request->user_id,
-            'total_kasbon' => $request->total_kasbon,
-            'kasbon_dibayar' => $request->kasbon_dibayar,
-            'sisa_kasbon' => $request->total_kasbon - $request->kasbon_dibayar,
+        $request->validate([
+            'pegawai_id' => 'required|exists:user,id',
+            'total_kasbon' => 'required|numeric|min:0',
+            'kasbon_dibayar' => 'required|numeric|min:0',
         ]);
 
-        return redirect()->route('riwayat-kasbon.index')
-            ->with('success', 'Data berhasil diperbarui');
+        $riwayatKasbon = RiwayatKasbon::findOrFail($id);
+
+        $total_kasbon = $request->total_kasbon;
+        $kasbon_dibayar = $request->kasbon_dibayar;
+        $sisa_kasbon = $total_kasbon - $kasbon_dibayar;
+
+        $riwayatKasbon->update([
+            'pegawai_id' => $request->pegawai_id,
+            'total_kasbon' => $total_kasbon,
+            'kasbon_dibayar' => $kasbon_dibayar,
+            'sisa_kasbon' => $sisa_kasbon,
+        ]);
+
+        return redirect()->route('riwayat-kasbon.index')->with('success', 'Riwayat kasbon berhasil diperbarui.');
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroy($id)
     {
-        RiwayatKasbon::findOrFail($id)->delete();
+        $riwayatKasbon = RiwayatKasbon::findOrFail($id);
+        $riwayatKasbon->delete();
 
-        return redirect()->route('riwayat-kasbon.index')
-            ->with('success', 'Data berhasil dihapus');
+        return redirect()->route('riwayat-kasbon.index')->with('success', 'Riwayat kasbon berhasil dihapus.');
     }
 }

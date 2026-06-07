@@ -89,7 +89,7 @@ Route::middleware(['auth'])->group(function() {
     |--------------------------------------------------------------------------
     */
     Route::resource('kasbon', KasbonController::class);
-    Route::get('/riwayatkasbon', [RiwayatKasbonController::class, 'index'])->name('riwayat-kasbon.index');
+    Route::resource('riwayat-kasbon', RiwayatKasbonController::class);
 
     /*
     |--------------------------------------------------------------------------

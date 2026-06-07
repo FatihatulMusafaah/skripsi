@@ -36,7 +36,6 @@ class KasbonController extends Controller
 
         Kasbon::create([
             'pegawai_id' => $request->pegawai_id,
-            'nama_pegawai' => $user->name,
             'jumlah_kasbon' => $request->jumlah_kasbon,
             'metode_pembayaran' => $request->metode_pembayaran,
             'persentase_potongan' => $request->metode_pembayaran == 'cicilan' ? $request->persentase_potongan : null,

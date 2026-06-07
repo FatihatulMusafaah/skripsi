@@ -16,12 +16,14 @@ class RiwayatKasbon extends Model
         'total_kasbon',
         'kasbon_dibayar',
         'sisa_kasbon',
+        'lama_cicilan',
+        'sisa_cicilan',
     ];
 
     /**
-     * Relasi ke user
+     * Relasi ke model User (Pegawai)
      */
-    public function user()
+    public function pegawai()
     {
         return $this->belongsTo(User::class, 'pegawai_id');
     }
