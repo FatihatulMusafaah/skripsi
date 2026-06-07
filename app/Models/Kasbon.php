@@ -18,6 +18,7 @@ class Kasbon extends Model
         'persentase_potongan',
         'potongan_per_bulan',
         'lama_cicilan',
+        'sisa_cicilan',
         'sisa_kasbon',
         'status',
     ];

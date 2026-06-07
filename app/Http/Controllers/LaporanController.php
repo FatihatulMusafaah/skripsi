@@ -11,24 +11,81 @@ use App\Models\Penggajian;
 
 class LaporanController extends Controller
 {
-    /**
-     * Tampilkan data laporan
-     */
     public function index()
     {
-        $pegawai = User::where('role', 'karyawan')->latest()->get();
+        return redirect()->route('owner.laporan.pegawai');
+    }
 
-        $absensi = Absensi::with('user')->latest()->get();
-        $cuti = Cuti::with('user')->latest()->get();
-        $kasbon = Kasbon::with('user')->latest()->get();
-        $penggajian = Penggajian::with('user')->latest()->get();
+    public function pegawai(Request $request)
+    {
+        $query = User::where('role', 'karyawan');
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+        $data = $query->latest()->get();
+        return view('owner.laporan.pegawai', compact('data'));
+    }
 
-        return view('laporan.index', compact(
-            'pegawai',
-            'absensi',
-            'cuti',
-            'kasbon',
-            'penggajian'
-        ));
+    public function absensi(Request $request)
+    {
+        $query = Absensi::with('user');
+        if ($request->filled('search')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+        if ($request->filled('tanggal')) {
+            $query->whereDate('tanggal', $request->tanggal);
+        }
+        $data = $query->latest()->get();
+        return view('owner.laporan.absensi', compact('data'));
+    }
+
+    public function cuti(Request $request)
+    {
+        $query = Cuti::with('user');
+        if ($request->filled('search')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        $data = $query->latest()->get();
+        return view('owner.laporan.cuti', compact('data'));
+    }
+
+    public function kasbon(Request $request)
+    {
+        $query = Kasbon::with('user');
+        if ($request->filled('search')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        $data = $query->latest()->get();
+        return view('owner.laporan.kasbon', compact('data'));
+    }
+
+    public function penggajian(Request $request)
+    {
+        $query = Penggajian::with('user');
+        if ($request->filled('search')) {
+            $query->whereHas('user', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%');
+            });
+        }
+        if ($request->filled('bulan')) {
+            $query->where('bulan', $request->bulan);
+        }
+        if ($request->filled('tahun')) {
+            $query->where('tahun', $request->tahun);
+        }
+        $data = $query->latest()->get();
+        return view('owner.laporan.penggajian', compact('data'));
     }
 }

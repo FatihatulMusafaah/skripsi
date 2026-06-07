@@ -41,31 +41,31 @@
 
     <!-- TOTAL PEGAWAI -->
     <div class="bg-white p-5 rounded-xl shadow border-l-4 border-blue-500">
-        <h3 class="text-gray-500 text-sm font-semibold">Total Pegawai</h3>
+        <h3 class="text-gray-500 text-sm font-semibold">Laporan Pegawai</h3>
         <p class="text-3xl font-bold text-blue-600 mt-2">{{ $totalPegawai ?? 0 }}</p>
     </div>
 
     <!-- ABSENSI -->
     <div class="bg-white p-5 rounded-xl shadow border-l-4 border-green-500">
-        <h3 class="text-gray-500 text-sm font-semibold">Absensi Hari Ini</h3>
+        <h3 class="text-gray-500 text-sm font-semibold">Laporan Absensi</h3>
         <p class="text-3xl font-bold text-green-600 mt-2">{{ $absensiHariIni ?? 0 }}</p>
     </div>
 
     <!-- CUTI -->
     <div class="bg-white p-5 rounded-xl shadow border-l-4 border-yellow-500">
-        <h3 class="text-gray-500 text-sm font-semibold">Cuti Hari Ini</h3>
+        <h3 class="text-gray-500 text-sm font-semibold">Laporan Cuti</h3>
         <p class="text-3xl font-bold text-yellow-500 mt-2">{{ $cutiHariIni ?? 0 }}</p>
     </div>
 
     <!-- KASBON -->
     <div class="bg-white p-5 rounded-xl shadow border-l-4 border-red-500">
-        <h3 class="text-gray-500 text-sm font-semibold">Kasbon Baru Hari Ini</h3>
+        <h3 class="text-gray-500 text-sm font-semibold">Laporan Kasbon</h3>
         <p class="text-3xl font-bold text-red-500 mt-2">{{ $kasbonHariIni ?? 0 }}</p>
     </div>
 
     <!-- TOTAL GAJI -->
     <div class="bg-white p-5 rounded-xl shadow border-l-4 border-purple-500">
-        <h3 class="text-gray-500 text-sm font-semibold">Gaji Bulan Ini</h3>
+        <h3 class="text-gray-500 text-sm font-semibold">Laporan Penggajian</h3>
         <p class="text-2xl font-bold text-purple-600 mt-2">Rp {{ number_format($totalGaji ?? 0, 0, ',', '.') }}</p>
     </div>
 
@@ -101,7 +101,7 @@
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Pegawai', 'Absensi', 'Cuti', 'Kasbon Baru'],
+            labels: ['Laporan Pegawai', 'Laporan Absensi', 'Laporan Cuti', 'Laporan Kasbon'],
             datasets: [{
                 label: 'Data Sistem',
                 data: [
@@ -135,7 +135,7 @@
     new Chart(pie, {
         type: 'pie',
         data: {
-            labels: ['Pegawai', 'Absensi', 'Cuti', 'Kasbon Baru'],
+            labels: ['Laporan Pegawai', 'Laporan Absensi', 'Laporan Cuti', 'Laporan Kasbon'],
             datasets: [{
                 data: [
                     {{ (int)($totalPegawai ?? 0) }},

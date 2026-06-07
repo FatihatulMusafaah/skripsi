@@ -125,20 +125,32 @@ class KaryawanController extends Controller
             'persentase_potongan' => 'required_if:metode_pembayaran,cicilan|nullable|integer|min:30|max:100',
         ]);
 
+        $user = Auth::user();
+        $gajiPokok = $user->gaji_pokok > 0 ? $user->gaji_pokok : 2000000;
+        
         $jumlah = $request->jumlah_kasbon;
         $metode = $request->metode_pembayaran;
-        $persen = $request->persentase_potongan ?? 100;
         
-        $potongan = ($jumlah * $persen) / 100;
-        $tenor = ceil($jumlah / $potongan);
+        if ($metode == 'bayar_sekali') {
+            $potongan = $jumlah;
+            $tenor = 1;
+            $persen = null;
+        } else {
+            $persen = $request->persentase_potongan;
+            // Rumus: Gaji Pokok * Persentase Potongan
+            $potongan = ($gajiPokok * $persen) / 100;
+            // Rumus: Total Kasbon / Potongan per Bulan (Bulatkan ke atas)
+            $tenor = ceil($jumlah / $potongan);
+        }
 
         Kasbon::create([
-            'pegawai_id' => Auth::id(),
+            'pegawai_id' => $user->id,
             'jumlah_kasbon' => $jumlah,
             'metode_pembayaran' => $metode,
-            'persentase_potongan' => $metode == 'cicilan' ? $persen : null,
+            'persentase_potongan' => $persen,
             'potongan_per_bulan' => $potongan,
             'lama_cicilan' => $tenor,
+            'sisa_cicilan' => $tenor,
             'sisa_kasbon' => $jumlah,
             'status' => 'pending',
         ]);
@@ -172,5 +184,39 @@ class KaryawanController extends Controller
         $kasbon = Kasbon::where('pegawai_id', $user->id)->sum('jumlah_kasbon');
         
         return view('karyawan.laporan', compact('absensi', 'cuti', 'kasbon'));
+    }
+
+    // RIWAYAT KASBON
+    public function riwayatKasbon(Request $request)
+    {
+        $user = Auth::user();
+        $query = Kasbon::where('pegawai_id', $user->id);
+
+        // Filter Status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        // Pencarian (berdasarkan nominal atau metode)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('jumlah_kasbon', 'like', "%$search%")
+                  ->orWhere('metode_pembayaran', 'like', "%$search%");
+            });
+        }
+
+        $riwayat = $query->latest()->paginate(10);
+        
+        return view('karyawan.riwayat_kasbon', compact('riwayat'));
+    }
+
+    public function riwayatKasbonDetail($id)
+    {
+        $kasbon = Kasbon::findOrFail($id);
+        if ($kasbon->pegawai_id != Auth::id()) {
+            abort(403);
+        }
+        return view('karyawan.riwayat_kasbon_detail', compact('kasbon'));
     }
 }

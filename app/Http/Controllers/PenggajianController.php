@@ -86,8 +86,11 @@ class PenggajianController extends Controller
                     $potongan_kasbon = $kasbonAktif->sisa_kasbon;
                 }
 
-                // Update Sisa Kasbon
+                // Update Sisa Kasbon dan Sisa Cicilan
                 $kasbonAktif->decrement('sisa_kasbon', $potongan_kasbon);
+                if ($kasbonAktif->sisa_cicilan > 0) {
+                    $kasbonAktif->decrement('sisa_cicilan');
+                }
                 
                 // Status akan otomatis jadi 'lunas' via model boot logic jika sisa = 0
                 $kasbonAktif->save();

@@ -105,13 +105,17 @@ Route::middleware(['auth'])->group(function() {
     */
     Route::middleware(['userAkses:owner'])->prefix('owner')->group(function() {
         Route::get('/dashboard', function () {
-            // Dashboard owner view (to be created)
             return view('owner.dashboard'); 
         })->name('owner.dashboard');
         
-        // Owner Access: Laporan
-        Route::get('/laporan', [LaporanController::class, 'index'])->name('owner.laporan');
-        // Additional owner specific report routes can be added here
+        // Owner Access: Laporan Berjenjang
+        Route::prefix('laporan')->group(function() {
+            Route::get('/pegawai', [LaporanController::class, 'pegawai'])->name('owner.laporan.pegawai');
+            Route::get('/absensi', [LaporanController::class, 'absensi'])->name('owner.laporan.absensi');
+            Route::get('/cuti', [LaporanController::class, 'cuti'])->name('owner.laporan.cuti');
+            Route::get('/kasbon', [LaporanController::class, 'kasbon'])->name('owner.laporan.kasbon');
+            Route::get('/penggajian', [LaporanController::class, 'penggajian'])->name('owner.laporan.penggajian');
+        });
     });
 
     /*
@@ -134,6 +138,8 @@ Route::middleware(['auth'])->group(function() {
         // Kasbon
         Route::get('/kasbon', [App\Http\Controllers\KaryawanController::class, 'kasbon'])->name('karyawan.kasbon');
         Route::post('/kasbon', [App\Http\Controllers\KaryawanController::class, 'kasbonStore'])->name('karyawan.kasbon.store');
+        Route::get('/riwayat-kasbon', [App\Http\Controllers\KaryawanController::class, 'riwayatKasbon'])->name('karyawan.riwayat_kasbon');
+        Route::get('/riwayat-kasbon/{id}', [App\Http\Controllers\KaryawanController::class, 'riwayatKasbonDetail'])->name('karyawan.riwayat_kasbon.detail');
 
         // Slip Gaji
         Route::get('/slip-gaji', [App\Http\Controllers\KaryawanController::class, 'slipGaji'])->name('karyawan.slip_gaji');
