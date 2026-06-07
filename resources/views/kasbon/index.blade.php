@@ -3,7 +3,7 @@
 @section('content')
 <div class="bg-white p-8 rounded-lg shadow-md">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Daftar Kasbon</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Daftar Kasbon Pegawai</h2>
         <a href="{{ route('kasbon.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-200">
             + Tambah Kasbon
         </a>
@@ -19,30 +19,41 @@
         <table class="min-w-full table-auto border-collapse">
             <thead>
                 <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
-                    <th class="py-3 px-6 text-left">No</th>
-                    <th class="py-3 px-6 text-left">Nama Pegawai</th>
-                    <th class="py-3 px-6 text-left">Jumlah</th>
-                    <th class="py-3 px-6 text-left">Metode</th>
+                    <th class="py-3 px-6 text-left">Pegawai</th>
+                    <th class="py-3 px-6 text-left">Total Kasbon</th>
+                    <th class="py-3 px-6 text-left">Potongan/Bln</th>
+                    <th class="py-3 px-6 text-left">Tenor</th>
+                    <th class="py-3 px-6 text-left">Sisa</th>
+                    <th class="py-3 px-6 text-left">Status</th>
                     <th class="py-3 px-6 text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 @forelse ($kasbon as $item)
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
-                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->iteration }}</td>
-                        <td class="py-3 px-6 text-left font-medium">{{ $item->user->name ?? '-' }}</td>
+                        <td class="py-3 px-6 text-left font-medium">
+                            {{ $item->user->name ?? '-' }}<br>
+                            <span class="text-xs text-gray-400">{{ $item->created_at->format('d/m/Y') }}</span>
+                        </td>
                         <td class="py-3 px-6 text-left">Rp {{ number_format($item->jumlah_kasbon, 0, ',', '.') }}</td>
-                        <td class="py-3 px-6 text-left">{{ $item->metode_pembayaran == 'cicil_30' ? 'Cicilan (30 Hari)' : 'Sekali Bayar' }}</td>
+                        <td class="py-3 px-6 text-left">
+                            Rp {{ number_format($item->potongan_per_bulan, 0, ',', '.') }}<br>
+                            <span class="text-xs text-blue-500">({{ $item->persentase_potongan }}%)</span>
+                        </td>
+                        <td class="py-3 px-6 text-left">{{ $item->lama_cicilan }} Bln</td>
+                        <td class="py-3 px-6 text-left font-bold">Rp {{ number_format($item->sisa_kasbon, 0, ',', '.') }}</td>
+                        <td class="py-3 px-6 text-left">
+                            <span class="px-2 py-1 rounded text-xs font-bold {{ $item->status == 'aktif' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700' }}">
+                                {{ strtoupper($item->status) }}
+                            </span>
+                        </td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex item-center justify-center gap-2">
-                                <a href="{{ route('kasbon.edit', $item->id) }}" class="text-blue-600 hover:text-blue-900 font-bold">
-                                    Edit
-                                </a>
                                 <form action="{{ route('kasbon.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Hapus data kasbon ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 font-bold">
-                                        Hapus
+                                    <button type="submit" class="text-red-500 hover:text-red-700 transition">
+                                        <i class="fas fa-trash"></i> Hapus
                                     </button>
                                 </form>
                             </div>

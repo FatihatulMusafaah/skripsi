@@ -40,8 +40,11 @@ class CutiController extends Controller
             'alasan' => 'required',
         ]);
 
+        $user = User::findOrFail($request->pegawai_id);
+
         Cuti::create([
             'pegawai_id' => $request->pegawai_id,
+            'nama_pegawai' => $user->name,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'alasan' => $request->alasan,
@@ -78,8 +81,11 @@ class CutiController extends Controller
             'status' => 'required|in:pending,disetujui,ditolak',
         ]);
 
+        $user = User::findOrFail($request->pegawai_id);
+
         $cuti->update([
             'pegawai_id' => $request->pegawai_id,
+            'nama_pegawai' => $user->name,
             'tanggal_mulai' => $request->tanggal_mulai,
             'tanggal_selesai' => $request->tanggal_selesai,
             'alasan' => $request->alasan,

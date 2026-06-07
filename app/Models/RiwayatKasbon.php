@@ -12,7 +12,7 @@ class RiwayatKasbon extends Model
     protected $table = 'riwayat_kasbon';
 
     protected $fillable = [
-        'user_id',
+        'pegawai_id',
         'total_kasbon',
         'kasbon_dibayar',
         'sisa_kasbon',
@@ -23,6 +23,6 @@ class RiwayatKasbon extends Model
      */
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'pegawai_id');
     }
 }

@@ -16,12 +16,15 @@ class Penggajian extends Model
         'bulan',
         'tahun',
         'gaji_pokok',
-        'jam_lembur',
-        'tarif_lembur',
-        'total_lembur',
+        'lembur',
         'potongan_kasbon',
         'potongan_cuti',
-        'gaji_bersih',
+        'total_gaji',
+        
+    ];
+
+    protected $casts = [
+        'tanggal' => 'date',
     ];
 
     /**

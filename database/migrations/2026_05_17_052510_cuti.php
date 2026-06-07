@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cuti', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('nama')->constrained('user')->onDelete('cascade');
+            $table->foreignId('pegawai_id')->constrained('user')->onDelete('cascade');
 
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');

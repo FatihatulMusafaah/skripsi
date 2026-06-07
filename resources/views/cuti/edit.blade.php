@@ -15,7 +15,7 @@
             <label class="block text-gray-700 text-sm font-bold mb-2">Pegawai</label>
             <select name="pegawai_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
                 @foreach ($pegawai as $p)
-                <option value="{{ $p->id }}" {{ $cuti->nama == $p->id ? 'selected' : '' }}>
+                <option value="{{ $p->id }}" {{ $cuti->pegawai_id == $p->id ? 'selected' : '' }}>
                     {{ $p->name }}
                 </option>
                 @endforeach

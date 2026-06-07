@@ -5,93 +5,53 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Kasbon;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class KasbonController extends Controller
 {
-    /**
-     * Tampilkan data kasbon
-     */
     public function index()
     {
         $kasbon = Kasbon::with('user')->latest()->get();
-
         return view('kasbon.index', compact('kasbon'));
     }
 
-    /**
-     * Form tambah kasbon
-     */
     public function create()
     {
         $pegawai = User::where('role', 'karyawan')->get();
-
         return view('kasbon.create', compact('pegawai'));
     }
 
-    /**
-     * Simpan kasbon
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'user_id' => 'required|exists:user,id',
-            'jumlah_kasbon' => 'required|numeric',
-            'metode_pembayaran' => 'required|in:cicil_30,sekali_bayar',
+            'pegawai_id' => 'required|exists:user,id',
+            'jumlah_kasbon' => 'required|numeric|min:1000',
+            'metode_pembayaran' => 'required|in:bayar_sekali,cicilan',
+            'persentase_potongan' => 'required_if:metode_pembayaran,cicilan|nullable|integer|min:30|max:100',
+            'potongan_per_bulan' => 'required|numeric',
+            'lama_cicilan' => 'required|integer|min:1',
         ]);
+
+        $user = User::findOrFail($request->pegawai_id);
 
         Kasbon::create([
-            'pegawai_id' => $request->user_id,
+            'pegawai_id' => $request->pegawai_id,
+            'nama_pegawai' => $user->name,
             'jumlah_kasbon' => $request->jumlah_kasbon,
             'metode_pembayaran' => $request->metode_pembayaran,
+            'persentase_potongan' => $request->metode_pembayaran == 'cicilan' ? $request->persentase_potongan : null,
+            'potongan_per_bulan' => $request->potongan_per_bulan,
+            'lama_cicilan' => $request->lama_cicilan,
+            'sisa_kasbon' => $request->jumlah_kasbon,
+            'status' => 'aktif',
         ]);
 
-        return redirect()->route('kasbon.index')
-            ->with('success', 'Kasbon berhasil ditambahkan');
+        return redirect()->route('kasbon.index')->with('success', 'Data Kasbon berhasil ditambahkan.');
     }
 
-    /**
-     * Form edit kasbon
-     */
-    public function edit($id)
-    {
-        $kasbon = Kasbon::findOrFail($id);
-        $pegawai = User::where('role', 'karyawan')->get();
-
-        return view('kasbon.edit', compact('kasbon', 'pegawai'));
-    }
-
-    /**
-     * Update kasbon
-     */
-    public function update(Request $request, $id)
-    {
-        $kasbon = Kasbon::findOrFail($id);
-
-        $request->validate([
-            'user_id' => 'required|exists:user,id',
-            'jumlah_kasbon' => 'required|numeric',
-            'metode_pembayaran' => 'required|in:cicil_30,sekali_bayar',
-        ]);
-
-        $kasbon->update([
-            'pegawai_id' => $request->user_id,
-            'jumlah_kasbon' => $request->jumlah_kasbon,
-            'metode_pembayaran' => $request->metode_pembayaran,
-        ]);
-
-        return redirect()->route('kasbon.index')
-            ->with('success', 'Data kasbon berhasil diupdate');
-    }
-
-    /**
-     * Hapus kasbon
-     */
     public function destroy($id)
     {
-        $kasbon = Kasbon::findOrFail($id);
-        $kasbon->delete();
-
-        return redirect()->route('kasbon.index')
-            ->with('success', 'Data kasbon berhasil dihapus');
+        Kasbon::findOrFail($id)->delete();
+        return back()->with('success', 'Data Kasbon dihapus.');
     }
 }

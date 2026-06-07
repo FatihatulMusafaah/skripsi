@@ -8,7 +8,7 @@
     </div>
 
     <div class="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-100">
-        <p class="text-blue-800"><strong>Pegawai:</strong> {{ $penggajian->user->name }}</p>
+        <p class="text-blue-800"><strong>Pegawai:</strong> {{ $penggajian->nama_pegawai ?? ($penggajian->user->name ?? '-') }}</p>
         <p class="text-blue-800"><strong>Periode:</strong> {{ $penggajian->bulan }} {{ $penggajian->tahun }}</p>
     </div>
 
@@ -24,17 +24,10 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             </div>
 
-            {{-- JAM LEMBUR --}}
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2">Jam Lembur</label>
-                <input type="number" name="jam_lembur" id="jam_lembur" value="{{ $penggajian->jam_lembur }}" 
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-            </div>
-
             {{-- TOTAL LEMBUR --}}
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Total Uang Lembur</label>
-                <input type="number" name="total_lembur" id="total_lembur" value="{{ $penggajian->total_lembur }}" 
+                <input type="number" name="lembur" id="lembur" value="{{ $penggajian->lembur }}" 
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             </div>
 
@@ -52,19 +45,23 @@
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" required>
             </div>
 
-            {{-- GAJI BERSIH --}}
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2 text-green-700">Gaji Bersih (Total)</label>
-                <input type="number" name="gaji_bersih" id="gaji_bersih" value="{{ $penggajian->gaji_bersih }}" 
+            {{-- TANGGAL (Hidden or specific use) --}}
+            <div class="mb-4 md:col-span-2">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Tanggal Catatan</label>
+                <input type="date" name="tanggal" value="{{ $penggajian->tanggal ? $penggajian->tanggal->format('Y-m-d') : '' }}" 
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+            </div>
+
+            {{-- TOTAL GAJI --}}
+            <div class="mb-4 md:col-span-2">
+                <label class="block text-gray-700 text-sm font-bold mb-2 text-green-700">Total Gaji (Diterima)</label>
+                <input type="number" name="total_gaji" id="total_gaji" value="{{ $penggajian->total_gaji }}" 
                     class="shadow appearance-none border rounded w-full py-2 px-3 text-green-700 font-bold bg-green-50 focus:outline-none border-green-300" readonly>
-                <p class="text-xs text-gray-500 mt-1">* Dihitung otomatis: (Gaji Pokok + Lembur) - Potongan</p>
+                <p class="text-xs text-gray-500 mt-1">* Dihitung otomatis: (Gaji Pokok + Lembur) - (Pot. Kasbon + Pot. Cuti)</p>
             </div>
         </div>
 
         <div class="flex items-center justify-end mt-8 gap-4">
-            <button type="button" onclick="calculateNet()" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded focus:outline-none transition">
-                Hitung Ulang
-            </button>
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none transition">
                 Simpan Perubahan
             </button>
@@ -75,20 +72,16 @@
 <script>
     function calculateNet() {
         const pokok = parseFloat(document.getElementById('gaji_pokok').value) || 0;
-        const lemburVal = parseFloat(document.getElementById('total_lembur').value) || 0;
-        const jamLembur = parseFloat(document.getElementById('jam_lembur').value) || 0;
+        const lemburVal = parseFloat(document.getElementById('lembur').value) || 0;
         const kasbon = parseFloat(document.getElementById('potongan_kasbon').value) || 0;
         const cuti = parseFloat(document.getElementById('potongan_cuti').value) || 0;
 
-        // Jika user mengubah jam lembur saja, hitung ulang total lembur (25rb/jam)
-        // Namun di form edit kita biarkan fleksibel.
-        
-        const bersih = (pokok + lemburVal) - (kasbon + cuti);
-        document.getElementById('gaji_bersih').value = bersih;
+        const total = (pokok + lemburVal) - (kasbon + cuti);
+        document.getElementById('total_gaji').value = Math.round(total);
     }
 
     // Auto-calculate on change
-    const inputs = ['gaji_pokok', 'total_lembur', 'potongan_kasbon', 'potongan_cuti'];
+    const inputs = ['gaji_pokok', 'lembur', 'potongan_kasbon', 'potongan_cuti'];
     inputs.forEach(id => {
         document.getElementById(id).addEventListener('input', calculateNet);
     });

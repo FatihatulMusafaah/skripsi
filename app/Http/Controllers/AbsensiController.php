@@ -39,8 +39,12 @@ class AbsensiController extends Controller
             'status' => 'required',
             'tanggal' => 'required|date',
         ]);
+
+        $user = User::findOrFail($request->pegawai_id);
+
         Absensi::create([
             'pegawai_id' => $request->pegawai_id,
+            'nama_pegawai' => $user->name,
             'tanggal' => $request->tanggal,
             'jam_masuk' => $request->jam_masuk ?? now()->format('H:i:s'),
             'jam_keluar' => $request->jam_keluar,
@@ -85,13 +89,16 @@ class AbsensiController extends Controller
         $absensi = Absensi::findOrFail($id);
 
         $request->validate([
-            'nama' => 'required|exists:user,id',
+            'pegawai_id' => 'required|exists:user,id',
             'tanggal' => 'required|date',
             'status' => 'required',
         ]);
 
+        $user = User::findOrFail($request->pegawai_id);
+
         $absensi->update([
-            'nama' => $request->nama,
+            'pegawai_id' => $request->pegawai_id,
+            'nama_pegawai' => $user->name,
             'tanggal' => $request->tanggal,
             'jam_masuk' => $request->jam_masuk,
             'jam_keluar' => $request->jam_keluar,

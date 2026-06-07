@@ -22,12 +22,12 @@
                 <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
                     <th class="py-3 px-6 text-left">No</th>
                     <th class="py-3 px-6 text-left">Nama Pegawai</th>
-                    <th class="py-3 px-6 text-left">Bulan/Tahun</th>
+                    <th class="py-3 px-6 text-left">Periode</th>
                     <th class="py-3 px-6 text-left">Gaji Pokok</th>
                     <th class="py-3 px-6 text-left">Lembur</th>
-                    <th class="py-3 px-6 text-left">Pot. Kasbon</th>
-                    <th class="py-3 px-6 text-left">Pot. Cuti</th>
-                    <th class="py-3 px-6 text-left">Gaji Bersih</th>
+                    <th class="py-3 px-6 text-left text-red-600">Pot. Kasbon</th>
+                    <th class="py-3 px-6 text-left text-red-600">Pot. Cuti</th>
+                    <th class="py-3 px-6 text-left">Total Gaji</th>
                     <th class="py-3 px-6 text-center">Aksi</th>
                 </tr>
             </thead>
@@ -35,16 +35,13 @@
                 @forelse ($penggajian as $item)
                     <tr class="border-b border-gray-200 hover:bg-gray-100">
                         <td class="py-3 px-6 text-left whitespace-nowrap">{{ $loop->iteration }}</td>
-                        <td class="py-3 px-6 text-left font-medium">{{ $item->user->name ?? '-' }}</td>
+                        <td class="py-3 px-6 text-left font-medium">{{ $item->nama_pegawai ?? ($item->user->name ?? '-') }}</td>
                         <td class="py-3 px-6 text-left">{{ $item->bulan }} {{ $item->tahun }}</td>
                         <td class="py-3 px-6 text-left">Rp {{ number_format($item->gaji_pokok, 0, ',', '.') }}</td>
-                        <td class="py-3 px-6 text-left">
-                            Rp {{ number_format($item->total_lembur, 0, ',', '.') }} 
-                            <span class="text-xs text-gray-400">({{ $item->jam_lembur }} Jm)</span>
-                        </td>
+                        <td class="py-3 px-6 text-left text-green-500">+ Rp {{ number_format($item->lembur, 0, ',', '.') }}</td>
                         <td class="py-3 px-6 text-left text-red-500">- Rp {{ number_format($item->potongan_kasbon, 0, ',', '.') }}</td>
-                        <td class="py-3 px-6 text-left text-orange-500">- Rp {{ number_format($item->potongan_cuti, 0, ',', '.') }}</td>
-                        <td class="py-3 px-6 text-left font-bold text-green-600">Rp {{ number_format($item->gaji_bersih, 0, ',', '.') }}</td>
+                        <td class="py-3 px-6 text-left text-red-500">- Rp {{ number_format($item->potongan_cuti, 0, ',', '.') }}</td>
+                        <td class="py-3 px-6 text-left font-bold text-blue-600">Rp {{ number_format($item->total_gaji, 0, ',', '.') }}</td>
                         <td class="py-3 px-6 text-center">
                             <div class="flex items-center justify-center space-x-3">
                                 <a href="{{ route('penggajian.edit', $item->id) }}" class="text-blue-600 hover:text-blue-900 font-bold transition">
@@ -55,7 +52,7 @@
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" 
-                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data gaji {{ $item->user->name }} periode {{ $item->bulan }} {{ $item->tahun }}?')" 
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data gaji {{ $item->nama_pegawai }}?')" 
                                         class="text-red-600 hover:text-red-900 font-bold transition">
                                         Hapus
                                     </button>
